@@ -5,7 +5,6 @@
  */
 package ud0_pelikulak;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import controller.Kontroladorea;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
