@@ -5,6 +5,7 @@
  */
 package ud0_pelikulak;
 
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import controller.Kontroladorea;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -57,7 +58,7 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
         
         /* LABEL bat gehitu - Taularen titulua */
         final Label label = new Label("Pelikulen datuak:");
-        label.setFont(new Font("Calibri", 20));
+        label.setFont(new Font("Calibri", 22));
 
         /* TAULAREN propietateak aldatu */
         taula.setEditable(false);
@@ -182,31 +183,77 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
         gehituZuzendaria.setPromptText("Zuzendaria");
         gehituZuzendaria.setMaxWidth(zuzendariaZut.getPrefWidth()*2);
         
-        // GEHITU ETA EZABATU botoiak gehitu
+        // GEHITU botoia definitu
         final Button btnGehitu = new Button("Gehitu"); 
         btnGehitu.setStyle(btnStyle);
-        btnGehitu.setOnAction((ActionEvent e) -> {            
-            Pelikula peli = new Pelikula(
-                gehituId.getText(),
-                gehituIzena.getText(),
-                gehituGaia.getText(),
-                Integer.parseInt(gehituUrtea.getText()),
-                Integer.parseInt(gehituIraupena.getText()),
-                gehituHerrialdea.getText(),
-                gehituZuzendaria.getText()
-            );
-            pDatuak.add(peli);
-            
-            // TextBox-ean dagoena garbitu
-            gehituId.clear();
-            gehituIzena.clear();
-            gehituGaia.clear();
-            gehituUrtea.clear();
-            gehituIraupena.clear();
-            gehituHerrialdea.clear();
-            gehituZuzendaria.clear();
+        btnGehitu.setOnAction((ActionEvent e) -> {    
+            int urtea=2018, iraupena = 100;
+            boolean urteaOndo = true, iraupenaOndo = true, gordeta = false; // aldagai boleanoak
+            try {
+                urtea = Integer.parseInt(gehituUrtea.getText()); // urtea jaso
+            }
+            catch (NumberFormatException nfeUrtea) { // zenbakia ez bada, errore mezua erakutsiko du
+                Alert dialogoAlerta = new Alert(Alert.AlertType.ERROR); // Ikonoa
+                dialogoAlerta.setTitle("KONTUZ!"); // Titulua
+                dialogoAlerta.setHeaderText(null);
+                dialogoAlerta.setContentText("Urtea gaizki sartu duzu!"); // Mezua
+                dialogoAlerta.initStyle(StageStyle.UTILITY);
+                dialogoAlerta.showAndWait();
+                urteaOndo = false;
+            }
+            try {
+                Integer.parseInt(gehituIraupena.getText()); // iraupena jaso
+            }
+            catch (NumberFormatException nfeIraupena) { // zenbakia ez bada, errore mezua erakutsiko du
+                Alert dialogoAlerta = new Alert(Alert.AlertType.ERROR); // Ikonoa
+                dialogoAlerta.setTitle("KONTUZ!"); // Titulua
+                dialogoAlerta.setHeaderText(null);
+                dialogoAlerta.setContentText("Iraupena gaizki sartu duzu!\nZenbaki oso bat izan behar da"); // Mezua
+                dialogoAlerta.initStyle(StageStyle.UTILITY);
+                dialogoAlerta.showAndWait();
+                iraupenaOndo = false;
+            }
+            if (urteaOndo && iraupenaOndo) { // urtea eta iraupena ondo jaso badira (formatu egokian)
+                Pelikula peli = new Pelikula(
+                    gehituId.getText(),
+                    gehituIzena.getText(),
+                    gehituGaia.getText(),
+                    urtea,
+                    iraupena,
+                    gehituHerrialdea.getText(),
+                    gehituZuzendaria.getText()
+                );
+                pDatuak.add(peli); 
+                gordeta = true; // gorde egingo da
+            }
+            if(!urteaOndo) {
+                gehituUrtea.clear(); // urtea gaizki sartu badu, textua hustu
+            }
+            if (!iraupenaOndo) {
+                gehituIraupena.clear(); // iraupena gaizki sartu badu, textua hustu
+            }
+
+            if (gordeta) {
+                /* Pelikula berria gorde bada, informazio mezu bat erakutsi */
+                Alert dialogoAlerta = new Alert(Alert.AlertType.INFORMATION); // Ikonoa
+                dialogoAlerta.setTitle("ERREGISTRATUTA!"); // Titulua
+                dialogoAlerta.setHeaderText(null);
+                dialogoAlerta.setContentText("Pelikula berri bat gorde da."); // Mezua
+                dialogoAlerta.initStyle(StageStyle.UTILITY);
+                dialogoAlerta.showAndWait();
+                
+                // TextBox-ean dagoena garbitu
+                gehituId.clear();
+                gehituIzena.clear();
+                gehituGaia.clear();
+                gehituUrtea.clear();
+                gehituIraupena.clear();
+                gehituHerrialdea.clear();
+                gehituZuzendaria.clear();
+            }    
         });
         
+        // EZABATU botoia definitu
         final Button btnEzabatu = new Button("Ezabatu"); 
         btnEzabatu.setStyle(btnStyle);
         btnEzabatu.setOnAction((ActionEvent e) -> {
@@ -217,21 +264,27 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
                 pDatuak.remove(pelikula1);
             }
             else {
-                Alert dialogoAlerta = new Alert(AlertType.WARNING);
-                dialogoAlerta.setTitle("KONTUZ!");
+                Alert dialogoAlerta = new Alert(AlertType.WARNING); // Ikonoa
+                dialogoAlerta.setTitle("KONTUZ!"); // Titulua
                 dialogoAlerta.setHeaderText(null);
-                dialogoAlerta.setContentText("Ez duzu pelikularik aukeratu!");
+                dialogoAlerta.setContentText("Ez duzu pelikularik aukeratu!"); // Mezua
                 dialogoAlerta.initStyle(StageStyle.UTILITY);
                 dialogoAlerta.showAndWait();
             }  
         });
-
+        
+        // IRTEN botoia definitu
+        final Button btnIrten = new Button("Irten"); 
+        btnIrten.setStyle(btnStyle);
+        btnIrten.setOnAction((ActionEvent e) -> {
+            System.exit(0);
+        });
         
         hbox1.getChildren().addAll(gehituId, gehituIzena, gehituGaia, gehituIraupena);
         hbox1.setSpacing(10); //textField-en arteko espazioa
         hbox2.getChildren().addAll(gehituUrtea, gehituHerrialdea, gehituZuzendaria);
         hbox2.setSpacing(10); //textField-en arteko espazioa
-        hbox3.getChildren().addAll(btnGehitu, btnEzabatu);
+        hbox3.getChildren().addAll(btnGehitu, btnEzabatu, btnIrten);
         hbox3.setSpacing(30);
         
         /* -------------------------------------------------------------- */
