@@ -20,10 +20,10 @@ public class Kontroladorea {
         // Bistako taulan kargatzeko datuak
         return FXCollections.observableArrayList(
             // Pelikulen instantzia berriak sortu
-            new Pelikula("01", "El mundo es suyo", "Komedia", "2018", "92min", "Espainia"),
-            new Pelikula("02", "Johnny English: De nuevo en acción", "Komedia", "2018", "88min", "Erresuma Batua"),
-            new Pelikula("03", "La vida es bella", "Drama", "1997", "117min", "Italia"),
-            new Pelikula("04", "Matrix", "Zeintzia fikzioa", "1999", "131min", "Estatu Batuak")
+            new Pelikula("P0001", "El mundo es suyo", "Komedia", 2018, 92, "Espainia"),
+            new Pelikula("P0002", "Johnny English: De nuevo en acción", "Komedia", 2018, 88, "Erresuma Batua"),
+            new Pelikula("P0003", "La vida es bella", "Drama", 1997, 117, "Italia"),
+            new Pelikula("P0004", "Matrix", "Zeintzia fikzioa", 1999, 131, "Estatu Batuak")
         );
     }         
 }

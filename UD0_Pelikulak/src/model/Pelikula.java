@@ -5,6 +5,7 @@
  */
 package model;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -18,17 +19,17 @@ public class Pelikula {
     private final SimpleStringProperty id;
     private final SimpleStringProperty izena;
     private final SimpleStringProperty gaia;
-    private final SimpleStringProperty urtea;
-    private final SimpleStringProperty iraupena;
+    private final SimpleIntegerProperty urtea;
+    private final SimpleIntegerProperty iraupena;
     private final SimpleStringProperty herrialdea;
     
     /* ERAIKITZAILEA */
-    public Pelikula(String pId, String pIzena, String pGaia, String pUrtea, String pIraupena, String pHerrialdea) { 
+    public Pelikula(String pId, String pIzena, String pGaia, int pUrtea, int pIraupena, String pHerrialdea) { 
         this.id = new SimpleStringProperty(pId);
         this.izena = new SimpleStringProperty(pIzena);
         this.gaia = new SimpleStringProperty(pGaia);
-        this.urtea = new SimpleStringProperty(pUrtea);
-        this.iraupena = new SimpleStringProperty(pIraupena);
+        this.urtea = new SimpleIntegerProperty(pUrtea);
+        this.iraupena = new SimpleIntegerProperty(pIraupena);
         this.herrialdea = new SimpleStringProperty(pHerrialdea);
     }
     
@@ -51,16 +52,16 @@ public class Pelikula {
     public void setGaia(String pGaia) {
         gaia.set(pGaia);
     }
-    public String getUrtea() {
+    public int getUrtea() {
         return urtea.get();
     }
-    public void setUrtea(String pUrtea) {
+    public void setUrtea(int pUrtea) {
         urtea.set(pUrtea);
     }
-    public String getIraupena() {
+    public int getIraupena() {
         return iraupena.get();
     }
-    public void setIraupena(String pIraupena) {
+    public void setIraupena(int pIraupena) {
         iraupena.set(pIraupena);
     }
     public String getHerrialdea() {
