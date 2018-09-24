@@ -8,6 +8,7 @@ package ud0_pelikulak;
 import controller.Kontroladorea;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -21,6 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.converter.IntegerStringConverter;
 import model.Pelikula;
 
 
@@ -92,32 +94,29 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
             ).setId(t.getNewValue());
             });
         
-//        /* Pelikulen URTEA definitu */
-//        TableColumn<Pelikula, String> urteZut = new TableColumn<>("Urtea"); // zutabearen titulua
-//        urteZut.setMinWidth(100); // zabalera minimoa
-//        urteZut.setCellValueFactory(new PropertyValueFactory<>("urtea"));
-//        urteZut.setCellFactory(TextFieldTableCell.<Pelikula>forTableColumn());
-//        urteZut.setOnEditCommit(
-//            (TableColumn.CellEditEvent<Pelikula, String> t) -> {
-//            ((Pelikula) t.getTableView().getItems().get(
-//            t.getTablePosition().getRow())
-//            ).setId(t.getNewValue());
-//            });
+        /* Pelikulen URTEA definitu */
+        TableColumn<Pelikula, Integer> urteZut = new TableColumn<>("Urtea"); // zutabearen titulua
+        urteZut.setMinWidth(100); // zabalera minimoa
+        urteZut.setCellValueFactory(new PropertyValueFactory<Pelikula, Integer>("urtea"));
+        urteZut.setCellFactory(TextFieldTableCell.<Pelikula, Integer>forTableColumn(new IntegerStringConverter())); // Integerrera bihurtu
+        urteZut.setOnEditCommit(
+            (TableColumn.CellEditEvent<Pelikula, Integer> t) -> {
+            ((Pelikula) t.getTableView().getItems().get(
+            t.getTablePosition().getRow())
+            ).setId(t.getNewValue().toString());
+            });
         
         /* Pelikulen IRAUPENA definitu */
-        /*TableColumn<Pelikula, Integer> iraupenZut = new TableColumn<>("Iraupena");
+        TableColumn<Pelikula, Integer> iraupenZut = new TableColumn<>("Iraupena");
         iraupenZut.setMinWidth(100); // zabalera minimoa
-        PropertyValueFactory<Pelikula, Integer> IraupenaCellValueFactory = new PropertyValueFactory<>("iraupena");
-        iraupenZut.setCellValueFactory(IraupenaCellValueFactory);*/
-        
-//        iraupenZut.setCellValueFactory(new PropertyValueFactory<>("iraupena"));
-//        iraupenZut.setCellFactory(TextFieldTableCell.<Pelikula>forTableColumn());
-//        iraupenZut.setOnEditCommit(
-//            (TableColumn.CellEditEvent<Pelikula, Integer> t) -> {
-//            ((Pelikula) t.getTableView().getItems().get(
-//            t.getTablePosition().getRow())
-//            ).setId(t.getNewValue());
-//            });
+        iraupenZut.setCellValueFactory(new PropertyValueFactory<Pelikula, Integer>("iraupena"));
+        iraupenZut.setCellFactory(TextFieldTableCell.<Pelikula, Integer>forTableColumn(new IntegerStringConverter())); // Integerrera bihurtu
+        iraupenZut.setOnEditCommit(
+            (TableColumn.CellEditEvent<Pelikula, Integer> t) -> {
+            ((Pelikula) t.getTableView().getItems().get(
+            t.getTablePosition().getRow())
+            ).setId(t.getNewValue().toString());
+            });
         
         /* Pelikulen HERRIALDEA definitu */
         TableColumn<Pelikula, String> herrialdeZut = new TableColumn<>("Herrialdea");
@@ -131,12 +130,11 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
             ).setId(t.getNewValue());
             });
         
-        taula.setItems(pDatuak); // datuak kargatu
+        /* Datuak kargatu */
+        taula.setItems(pDatuak); 
 
-      
-        
         /* Zutabeak taulan gehitu */
-        taula.getColumns().addAll(idZut, izenZut, gaiaZut/*, urteZut, iraupenZut*/, herrialdeZut);
+        taula.getColumns().addAll(idZut, izenZut, gaiaZut, urteZut, iraupenZut, herrialdeZut);
         
         
         vbox.setSpacing(10); // label eta taularen arteko tartea
