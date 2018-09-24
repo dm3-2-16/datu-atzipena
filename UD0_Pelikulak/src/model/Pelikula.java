@@ -22,15 +22,18 @@ public class Pelikula {
     private final SimpleIntegerProperty urtea;
     private final SimpleIntegerProperty iraupena;
     private final SimpleStringProperty herrialdea;
+    private final SimpleStringProperty zuzendaria;
+    
     
     /* ERAIKITZAILEA */
-    public Pelikula(String pId, String pIzena, String pGaia, int pUrtea, int pIraupena, String pHerrialdea) { 
+    public Pelikula(String pId, String pIzena, String pGaia, int pUrtea, int pIraupena, String pHerrialdea, String pZuzendaria) { 
         this.id = new SimpleStringProperty(pId);
         this.izena = new SimpleStringProperty(pIzena);
         this.gaia = new SimpleStringProperty(pGaia);
         this.urtea = new SimpleIntegerProperty(pUrtea);
         this.iraupena = new SimpleIntegerProperty(pIraupena);
         this.herrialdea = new SimpleStringProperty(pHerrialdea);
+        this.zuzendaria = new SimpleStringProperty(pZuzendaria);
     }
     
     /* GETTERS & SETTERS */
@@ -67,7 +70,13 @@ public class Pelikula {
     public String getHerrialdea() {
         return herrialdea.get();
     }
-    public void setLastName(String pHerrialdea) {
+    public void setHerrialdea(String pHerrialdea) {
         herrialdea.set(pHerrialdea);
+    }
+    public String getZuzendaria() {
+        return zuzendaria.get();
+    }
+    public void setZuzendaria(String pZuzendaria) {
+        zuzendaria.set(pZuzendaria);
     }
 }

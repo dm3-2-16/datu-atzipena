@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
@@ -35,7 +36,8 @@ import model.Pelikula;
 public class UD0_Pelikulak extends Application { // Application klasetik heredatzeko
     /* ATRIBUTOAK */
     private final TableView<Pelikula> taula = new TableView<>(); // taula sortzeko instantzia
-    final HBox hbox = new HBox(); // horizontal box
+    final HBox hbox1 = new HBox(); // horizontal box
+    final HBox hbox2 = new HBox(); // horizontal box
     final VBox vbox = new VBox(); // vertical box
     
     @Override
@@ -44,7 +46,7 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
         ObservableList<Pelikula> pDatuak = Kontroladorea.datuakKargatu();
         
         stage.setTitle("PELIKULAK"); // Bistari titulua gehitu
-        stage.setWidth(800);
+        stage.setWidth(900);
         stage.setHeight(750);
         
         /* LABEL bat gehitu - Taularen titulua */
@@ -96,7 +98,7 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
         
         /* Pelikulen URTEA definitu */
         TableColumn<Pelikula, Integer> urteZut = new TableColumn<>("Urtea"); // zutabearen titulua
-        urteZut.setMinWidth(100); // zabalera minimoa
+        urteZut.setMinWidth(50); // zabalera minimoa
         urteZut.setCellValueFactory(new PropertyValueFactory<Pelikula, Integer>("urtea"));
         urteZut.setCellFactory(TextFieldTableCell.<Pelikula, Integer>forTableColumn(new IntegerStringConverter())); // Integerrera bihurtu
         urteZut.setOnEditCommit(
@@ -108,7 +110,7 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
         
         /* Pelikulen IRAUPENA definitu */
         TableColumn<Pelikula, Integer> iraupenZut = new TableColumn<>("Iraupena");
-        iraupenZut.setMinWidth(100); // zabalera minimoa
+        iraupenZut.setMinWidth(50); // zabalera minimoa
         iraupenZut.setCellValueFactory(new PropertyValueFactory<Pelikula, Integer>("iraupena"));
         iraupenZut.setCellFactory(TextFieldTableCell.<Pelikula, Integer>forTableColumn(new IntegerStringConverter())); // Integerrera bihurtu
         iraupenZut.setOnEditCommit(
@@ -130,16 +132,29 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
             ).setId(t.getNewValue());
             });
         
+        /* Pelikulen ZUZENDARIA definitu */
+        TableColumn<Pelikula, String> zuzendariaZut = new TableColumn<>("Zuzendaria");
+        zuzendariaZut.setMinWidth(150); // zabalera minimoa
+        zuzendariaZut.setCellValueFactory(new PropertyValueFactory<>("zuzendaria"));
+        zuzendariaZut.setCellFactory(TextFieldTableCell.<Pelikula>forTableColumn());
+        zuzendariaZut.setOnEditCommit(
+            (TableColumn.CellEditEvent<Pelikula, String> t) -> {
+            ((Pelikula) t.getTableView().getItems().get(
+            t.getTablePosition().getRow())
+            ).setId(t.getNewValue());
+            });
+        
         /* Datuak kargatu */
         taula.setItems(pDatuak); 
 
         /* Zutabeak taulan gehitu */
-        taula.getColumns().addAll(idZut, izenZut, gaiaZut, urteZut, iraupenZut, herrialdeZut);
+        taula.getColumns().addAll(idZut, izenZut, gaiaZut, urteZut, iraupenZut, herrialdeZut, zuzendariaZut);
         
-        
+
+        /* -------------------------------------------------------------- */
         vbox.setSpacing(10); // label eta taularen arteko tartea
         vbox.setPadding(new Insets(20, 0, 0, 20));
-        vbox.getChildren().addAll(label, taula, hbox);
+        vbox.getChildren().addAll(label, taula, hbox1, hbox2);
         ((Group) scene.getRoot()).getChildren().addAll(vbox);
         
         /* BISTA erakusteko */
