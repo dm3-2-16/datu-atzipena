@@ -173,7 +173,7 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
         
         final TextField gehituUrtea = new TextField();
         gehituUrtea.setPromptText("Urtea");
-        gehituUrtea.setMaxWidth(iraupenZut.getPrefWidth());
+        gehituUrtea.setMaxWidth(urteZut.getPrefWidth());
         
         final TextField gehituHerrialdea = new TextField();
         gehituHerrialdea.setPromptText("Herrialdea");
