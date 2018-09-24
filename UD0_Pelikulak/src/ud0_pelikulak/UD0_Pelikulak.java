@@ -44,7 +44,7 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
     final HBox hbox2 = new HBox(); // horizontal box
     final HBox hbox3 = new HBox(); // horizontal box
     final VBox vbox = new VBox(); // vertical box
-    private String btnStyle = "-fx-background-color:lightcoral; -fx-font: 20px \"Serif\"; -fx-text-fill: white; -fx-alignment: CENTER;"; // BOTOIEN ESTILOA DEFINITU
+    private String btnStyle = "-fx-pref-width: 150px; -fx-background-color:lightcoral; -fx-font: 20px \"Serif\"; -fx-text-fill: white; -fx-alignment: CENTER;"; // BOTOIEN ESTILOA DEFINITU
     
     @Override
     public void start(Stage stage) { // stage --> Bista/Window
@@ -284,7 +284,7 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
         hbox2.getChildren().addAll(gehituUrtea, gehituHerrialdea, gehituZuzendaria);
         hbox2.setSpacing(10); //textField-en arteko espazioa
         hbox3.getChildren().addAll(btnGehitu, btnEzabatu, btnIrten);
-        hbox3.setSpacing(30);
+        hbox3.setSpacing(50);
         
         /* -------------------------------------------------------------- */
         vbox.setSpacing(10); // label eta taularen arteko tartea
