@@ -13,6 +13,8 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -24,6 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.converter.IntegerStringConverter;
 import model.Pelikula;
 
@@ -181,9 +184,8 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
         
         // GEHITU ETA EZABATU botoiak gehitu
         final Button btnGehitu = new Button("Gehitu"); 
-        //btnGehitu.setStyle("");
         btnGehitu.setStyle(btnStyle);
-        btnGehitu.setOnAction((ActionEvent e) -> {
+        btnGehitu.setOnAction((ActionEvent e) -> {            
             Pelikula peli = new Pelikula(
                 gehituId.getText(),
                 gehituIzena.getText(),
@@ -208,8 +210,20 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
         final Button btnEzabatu = new Button("Ezabatu"); 
         btnEzabatu.setStyle(btnStyle);
         btnEzabatu.setOnAction((ActionEvent e) -> {
-            Pelikula pelikula1 = taula.getSelectionModel().getSelectedItem();    
-            pDatuak.remove(pelikula1);
+            Object aukeratuta = taula.getSelectionModel().getSelectedItem();
+            /* Ezabatu aurretik, konprobatu pelikularik aukeratuta dagoen edo ez */
+            if (aukeratuta!=null) {
+                Pelikula pelikula1 = (Pelikula)aukeratuta;    
+                pDatuak.remove(pelikula1);
+            }
+            else {
+                Alert dialogoAlerta = new Alert(AlertType.WARNING);
+                dialogoAlerta.setTitle("KONTUZ!");
+                dialogoAlerta.setHeaderText(null);
+                dialogoAlerta.setContentText("Ez duzu pelikularik aukeratu!");
+                dialogoAlerta.initStyle(StageStyle.UTILITY);
+                dialogoAlerta.showAndWait();
+            }  
         });
 
         
