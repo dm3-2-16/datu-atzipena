@@ -214,7 +214,7 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
             }
             if (urteaOndo && iraupenaOndo) { // urtea eta iraupena ondo jaso badira (formatu egokian)
                 Pelikula peli = new Pelikula(
-                    gehituId.getText(),
+                    gehituId.getText().toUpperCase(),
                     gehituIzena.getText(),
                     gehituGaia.getText(),
                     urtea,
