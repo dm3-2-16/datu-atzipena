@@ -11,7 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
 /**
  *
  * @author Oihane Axpe
- * @version V1.0
+ * @version V2.0
  */
 
 public class Pelikula {

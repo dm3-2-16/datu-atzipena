@@ -35,7 +35,7 @@ import model.Pelikula;
 /**
  *
  * @author Oihane Axpe
- * @version V1.0
+ * @version V2.0
  */
 public class UD1_Pelikulak extends Application { // Application klasetik heredatzeko
     /* ATRIBUTOAK */
