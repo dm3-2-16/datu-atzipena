@@ -60,7 +60,7 @@ public class UD0_Pelikulak extends Application { // Application klasetik heredat
         label.setFont(new Font("Calibri", 22));
 
         /* TAULAREN propietateak aldatu */
-        taula.setEditable(false);
+        taula.setEditable(true);
         taula.setStyle("-fx-background-color:lightcoral");        
         
         /* Pelikulen ID-a definitu */
