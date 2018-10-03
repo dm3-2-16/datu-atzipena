@@ -50,7 +50,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
     @Override
     public void start(Stage stage) { // stage --> Bista/Window
         Scene scene = new Scene(new Group());
-        ObservableList<Pelikula> pDatuak = Kontroladorea.datuakKargatu();
+        /* Datuak ObservableList<Pelikula>-tik kargatu */
+        ObservableList<Pelikula> obListDatuak = Kontroladorea.datuakKargatu();
         
         stage.setTitle("PELIKULAK"); // Bistari titulua gehitu
         stage.setWidth(900);
@@ -149,7 +150,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             });
         
         /* Datuak kargatu */
-        taula.setItems(pDatuak); 
+        taula.setItems(obListDatuak); 
 
         /* Zutabeak taulan gehitu */
         taula.getColumns().addAll(idZut, izenZut, gaiaZut, iraupenZut, urteZut, herrialdeZut, zuzendariaZut);
@@ -261,7 +262,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             /* Ezabatu aurretik, konprobatu pelikularik aukeratuta dagoen edo ez */
             if (aukeratuta!=null) {
                 Pelikula pelikula1 = (Pelikula)aukeratuta;    
-                pDatuak.remove(pelikula1);
+                obListDatuak.remove(pelikula1);
             }
             else {
                 Alert dialogoAlerta = new Alert(AlertType.WARNING); // Ikonoa
