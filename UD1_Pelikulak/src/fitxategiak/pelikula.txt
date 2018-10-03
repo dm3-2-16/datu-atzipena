@@ -1,5 +1,5 @@
-P0001,El mundo es suyo,Komedia,2018,100,Espainia,Alfonso Sánchez Fernández
-P0002,Johnny Enghish: De nuevo en acción,Komedia,2018,100,Erresuma Batua,David Kerr
-P0003,La vida es bella,Drama,1997,100,Italia,Roberto Benigni
-P0004,Matrix,Zientzia fikzioa,1999,100,Estatu Batuak,Lilly Wachowski, Lana Wachowski
-P0005,La familia Belier,Komedia,2014,100,Frantzia,Eric Lartigau
+P0001,El mundo es suyo,Komedia,92,2018,Espainia,Alfonso Sánchez Fernández
+P0002,Johnny English: De nuevo en acción,Komedia,88,2018,Erresuma Batua,David Kerr
+P0003,La vida es bella,Drama,117,1997,Italia,Roberto Benigni
+P0004,Matrix,Zeintzia fikzioa,131,1999,Estatu Batuak,Lilly Wachowski, Lana Wachowski
+P0005,SDAF,SDF,100,2014,DFA,DFAD

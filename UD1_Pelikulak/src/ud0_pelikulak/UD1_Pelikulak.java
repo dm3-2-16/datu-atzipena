@@ -29,7 +29,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.converter.IntegerStringConverter;
 import model.Pelikula;
-import model.PelikulaKudeatu;
 
 
 
@@ -224,7 +223,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
                     gehituHerrialdea.getText(),
                     gehituZuzendaria.getText()
                 );
-                PelikulaKudeatu.pelikulaGehitu(peli);
+                obListDatuak.add(peli); // pelikula berria observableList-ean (taulan) gehitu
+                Kontroladorea.fitxategianGorde(obListDatuak); // ObservableList-ean dauden pelikula guztiak fitxategian idatzi
                 gordeta = true; // gorde egingo da
             }
             if(!urteaOndo) {
