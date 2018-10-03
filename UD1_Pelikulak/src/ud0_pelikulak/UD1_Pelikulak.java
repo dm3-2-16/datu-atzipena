@@ -100,18 +100,6 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             ).setId(t.getNewValue());
             });
         
-        /* Pelikulen URTEA definitu */
-        TableColumn<Pelikula, Integer> urteZut = new TableColumn<>("Urtea"); // zutabearen titulua
-        urteZut.setMinWidth(50); // zabalera minimoa
-        urteZut.setCellValueFactory(new PropertyValueFactory<Pelikula, Integer>("urtea"));
-        urteZut.setCellFactory(TextFieldTableCell.<Pelikula, Integer>forTableColumn(new IntegerStringConverter())); // Integerrera bihurtu
-        urteZut.setOnEditCommit(
-            (TableColumn.CellEditEvent<Pelikula, Integer> t) -> {
-            ((Pelikula) t.getTableView().getItems().get(
-            t.getTablePosition().getRow())
-            ).setId(t.getNewValue().toString());
-            });
-        
         /* Pelikulen IRAUPENA definitu */
         TableColumn<Pelikula, Integer> iraupenZut = new TableColumn<>("Iraupena");
         iraupenZut.setMinWidth(50); // zabalera minimoa
@@ -124,6 +112,18 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             ).setId(t.getNewValue().toString());
             });
         
+        /* Pelikulen URTEA definitu */
+        TableColumn<Pelikula, Integer> urteZut = new TableColumn<>("Urtea"); // zutabearen titulua
+        urteZut.setMinWidth(50); // zabalera minimoa
+        urteZut.setCellValueFactory(new PropertyValueFactory<Pelikula, Integer>("urtea"));
+        urteZut.setCellFactory(TextFieldTableCell.<Pelikula, Integer>forTableColumn(new IntegerStringConverter())); // Integerrera bihurtu
+        urteZut.setOnEditCommit(
+            (TableColumn.CellEditEvent<Pelikula, Integer> t) -> {
+            ((Pelikula) t.getTableView().getItems().get(
+            t.getTablePosition().getRow())
+            ).setId(t.getNewValue().toString());
+            });
+             
         /* Pelikulen HERRIALDEA definitu */
         TableColumn<Pelikula, String> herrialdeZut = new TableColumn<>("Herrialdea");
         herrialdeZut.setMinWidth(100); // zabalera minimoa
@@ -152,7 +152,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         taula.setItems(pDatuak); 
 
         /* Zutabeak taulan gehitu */
-        taula.getColumns().addAll(idZut, izenZut, gaiaZut, urteZut, iraupenZut, herrialdeZut, zuzendariaZut);
+        taula.getColumns().addAll(idZut, izenZut, gaiaZut, iraupenZut, urteZut, herrialdeZut, zuzendariaZut);
         
         /* BEHEKO ZATIA - DATUAK GEHITU, EZABATU... */
         final TextField gehituId = new TextField();
