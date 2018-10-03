@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ud0_pelikulak;
+package ud1_pelikulak;
 
 import controller.Kontroladorea;
 import javafx.application.Application;
