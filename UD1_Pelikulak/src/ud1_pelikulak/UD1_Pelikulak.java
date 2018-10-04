@@ -24,7 +24,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.converter.IntegerStringConverter;
@@ -41,8 +43,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
     /* ATRIBUTOAK */
     private final TableView<Pelikula> taula = new TableView<>(); // taula sortzeko instantzia
     final HBox hbox1 = new HBox(); // horizontal box
-    final HBox hbox2 = new HBox(); // horizontal box
-    final HBox hbox3 = new HBox(); // horizontal box
+    final HBox hboxBotoiak = new HBox(); // horizontal box
+    //final HBox hbox3 = new HBox(); // horizontal box
     final VBox vbox = new VBox(); // vertical box
     private String btnStyle = "-fx-pref-width: 150px; -fx-background-color:lightcoral; -fx-font: 20px \"Serif\"; -fx-text-fill: white; -fx-alignment: CENTER;"; // BOTOIEN ESTILOA DEFINITU
     
@@ -53,8 +55,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         ObservableList<Pelikula> obListDatuak = Kontroladorea.datuakKargatu();
         
         stage.setTitle("PELIKULAK"); // Bistari titulua gehitu
-        stage.setWidth(900);
-        stage.setHeight(650);
+        stage.setWidth(1000);
+        stage.setHeight(700);
         
         /* LABEL bat gehitu - Taularen titulua */
         final Label label = new Label("Pelikulen datuak:");
@@ -62,11 +64,11 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
 
         /* TAULAREN propietateak aldatu */
         taula.setEditable(true);
-        taula.setStyle("-fx-background-color:lightcoral");        
+        taula.setStyle("-fx-background-color:lightcoral"); 
         
         /* Pelikulen ID-a definitu */
         TableColumn<Pelikula, String> idZut = new TableColumn<>("Id-a"); // zutabearen titulua
-        idZut.setMinWidth(50); // zabalera minimoa
+        idZut.setMinWidth(75); // zabalera minimoa
         idZut.setCellValueFactory(new PropertyValueFactory<>("id"));
         idZut.setCellFactory(TextFieldTableCell.<Pelikula>forTableColumn());
         idZut.setOnEditCommit(
@@ -102,7 +104,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         
         /* Pelikulen IRAUPENA definitu */
         TableColumn<Pelikula, Integer> iraupenZut = new TableColumn<>("Iraupena");
-        iraupenZut.setMinWidth(50); // zabalera minimoa
+        iraupenZut.setMinWidth(75); // zabalera minimoa
         iraupenZut.setCellValueFactory(new PropertyValueFactory<Pelikula, Integer>("iraupena"));
         iraupenZut.setCellFactory(TextFieldTableCell.<Pelikula, Integer>forTableColumn(new IntegerStringConverter())); // Integerrera bihurtu
         iraupenZut.setOnEditCommit(
@@ -114,7 +116,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         
         /* Pelikulen URTEA definitu */
         TableColumn<Pelikula, Integer> urteZut = new TableColumn<>("Urtea"); // zutabearen titulua
-        urteZut.setMinWidth(50); // zabalera minimoa
+        urteZut.setMinWidth(75); // zabalera minimoa
         urteZut.setCellValueFactory(new PropertyValueFactory<Pelikula, Integer>("urtea"));
         urteZut.setCellFactory(TextFieldTableCell.<Pelikula, Integer>forTableColumn(new IntegerStringConverter())); // Integerrera bihurtu
         urteZut.setOnEditCommit(
@@ -138,7 +140,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         
         /* Pelikulen ZUZENDARIA definitu */
         TableColumn<Pelikula, String> zuzendariaZut = new TableColumn<>("Zuzendaria");
-        zuzendariaZut.setMinWidth(150); // zabalera minimoa
+        zuzendariaZut.setMinWidth(200); // zabalera minimoa
         zuzendariaZut.setCellValueFactory(new PropertyValueFactory<>("zuzendaria"));
         zuzendariaZut.setCellFactory(TextFieldTableCell.<Pelikula>forTableColumn());
         zuzendariaZut.setOnEditCommit(
@@ -155,6 +157,38 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         taula.getColumns().addAll(idZut, izenZut, gaiaZut, iraupenZut, urteZut, herrialdeZut, zuzendariaZut);
         
         /* BEHEKO ZATIA - DATUAK GEHITU, EZABATU... */
+        // Label-ak definitu
+        final Label labelId = new Label();
+        labelId.setText("Id-a:");
+        labelEstiloa(labelId);
+        labelId.setMaxWidth(idZut.getPrefWidth());
+        
+        final Label labelIzena = new Label();
+        labelIzena.setText("Izena:");
+        labelEstiloa(labelIzena);
+        
+        final Label labelGaia = new Label();
+        labelGaia.setText("Gaia:");
+        labelEstiloa(labelGaia);
+        
+        final Label labelIraupena = new Label();
+        labelIraupena.setText("Iraupena:");
+        labelEstiloa(labelIraupena);
+        
+        final Label labelUrtea = new Label();
+        labelUrtea.setText("Urtea:");
+        labelEstiloa(labelUrtea);
+        
+        final Label labelHerrialdea = new Label();
+        labelHerrialdea.setText("Herrialdea:");
+        labelEstiloa(labelHerrialdea);
+        
+        final Label labelZuzendaria = new Label();
+        labelZuzendaria.setText("Zuzendaria:");
+        labelEstiloa(labelZuzendaria);
+        
+        
+        // TextField-ak definitu
         final TextField gehituId = new TextField();
         gehituId.setPromptText("Id");
         gehituId.setMaxWidth(idZut.getPrefWidth());
@@ -162,11 +196,11 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         final TextField gehituIzena = new TextField();
         gehituIzena.setPromptText("Izena");
         gehituIzena.setMaxWidth(izenZut.getPrefWidth()*2);
-        
+
         final TextField gehituGaia = new TextField();
         gehituGaia.setPromptText("Gaia");
         gehituGaia.setMaxWidth(gaiaZut.getPrefWidth()*2);
-        
+
         final TextField gehituIraupena = new TextField();
         gehituIraupena.setPromptText("Iraupena");
         gehituIraupena.setMaxWidth(iraupenZut.getPrefWidth()*2);
@@ -263,6 +297,14 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             if (aukeratuta!=null) {
                 Pelikula pelikula1 = (Pelikula)aukeratuta;    
                 obListDatuak.remove(pelikula1);
+                Kontroladorea.fitxategianGorde(obListDatuak); // ObservableList-ean dauden pelikula guztiak fitxategian idatzi
+                /* Pelikula ezabatu bada, informazio mezu bat erakutsi */
+                Alert dialogoAlerta = new Alert(Alert.AlertType.INFORMATION); // Ikonoa
+                dialogoAlerta.setTitle("EZABATUTA!"); // Titulua
+                dialogoAlerta.setHeaderText(null);
+                dialogoAlerta.setContentText("Aukeratutako pelikula ezabatu da."); // Mezua
+                dialogoAlerta.initStyle(StageStyle.UTILITY);
+                dialogoAlerta.showAndWait();
             }
             else {
                 Alert dialogoAlerta = new Alert(AlertType.WARNING); // Ikonoa
@@ -271,7 +313,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
                 dialogoAlerta.setContentText("Ez duzu pelikularik aukeratu!"); // Mezua
                 dialogoAlerta.initStyle(StageStyle.UTILITY);
                 dialogoAlerta.showAndWait();
-            }  
+            } 
         });
         
         // IRTEN botoia definitu
@@ -280,23 +322,66 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         btnIrten.setOnAction((ActionEvent e) -> {
             System.exit(0);
         });
+
+        // textBox eta label-ak alineatzeko, vbox-ak sortu
+        VBox vBoxLabel1 = new VBox(); // vertical box
+        vBoxLabel1.getChildren().addAll(labelId, labelUrtea );
+        vBoxLabel1.setSpacing(20);
         
-        hbox1.getChildren().addAll(gehituId, gehituIzena, gehituGaia, gehituIraupena);
+        VBox vBoxTxtBox1 = new VBox();
+        vBoxTxtBox1.getChildren().addAll(gehituId, gehituUrtea);
+        vBoxTxtBox1.setSpacing(10);
+        
+        VBox vBoxLabel2 = new VBox();
+        vBoxLabel2.getChildren().addAll(labelIzena, labelHerrialdea);
+        vBoxLabel2.setSpacing(20);
+        
+        VBox vBoxTxtBox2 = new VBox();
+        vBoxTxtBox2.getChildren().addAll(gehituIzena, gehituHerrialdea);
+        vBoxTxtBox2.setSpacing(10);
+        
+        VBox vBoxLabel3 = new VBox();
+        vBoxLabel3.getChildren().addAll(labelGaia, labelZuzendaria);
+        vBoxLabel3.setSpacing(20);
+        
+        VBox vBoxTxtBox3 = new VBox();
+        vBoxTxtBox3.getChildren().addAll(gehituGaia, gehituZuzendaria);
+        vBoxTxtBox3.setSpacing(10);
+        
+        VBox vBoxLabel4 = new VBox();
+        vBoxLabel4.getChildren().addAll(labelIraupena);
+        vBoxLabel4.setSpacing(20);
+        
+        VBox vBoxTxtBox4 = new VBox();
+        vBoxTxtBox4.getChildren().addAll(gehituIraupena);
+        vBoxTxtBox4.setSpacing(10);
+
+        hbox1.setPadding(new Insets(10, 0, 0, 10));
+        hbox1.getChildren().addAll(vBoxLabel1, vBoxTxtBox1, vBoxLabel2, vBoxTxtBox2, vBoxLabel3, vBoxTxtBox3, vBoxLabel4, vBoxTxtBox4);
         hbox1.setSpacing(10); //textField-en arteko espazioa
-        hbox2.getChildren().addAll(gehituUrtea, gehituHerrialdea, gehituZuzendaria);
-        hbox2.setSpacing(10); //textField-en arteko espazioa
-        hbox3.getChildren().addAll(btnGehitu, btnEzabatu, btnIrten);
-        hbox3.setSpacing(50);
+        
+        hboxBotoiak.getChildren().addAll(btnGehitu, btnEzabatu, btnIrten);
+        hboxBotoiak.setSpacing(50);
+        hboxBotoiak.setPadding(new Insets(20, 0, 0, 20));
         
         /* -------------------------------------------------------------- */
+        /* ZATIAK banatzeko lerro bat sartu */
+        Line lerroa = new Line(10, 10, 900, 10);
+
         vbox.setSpacing(10); // label eta taularen arteko tartea
         vbox.setPadding(new Insets(20, 0, 0, 20));
-        vbox.getChildren().addAll(label, taula, hbox1, hbox2, hbox3);
+        vbox.getChildren().addAll(label, taula, lerroa, hbox1,  hboxBotoiak);
+        
         ((Group) scene.getRoot()).getChildren().addAll(vbox);
         
         /* BISTA erakusteko */
         stage.setScene(scene);
         stage.show();
+    }
+    
+    
+    private void labelEstiloa(Label label) {
+        label.setFont(Font.font("Calibri", FontWeight.BOLD, 14));
     }
     
     /**
@@ -306,4 +391,3 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         launch(args); // start metodoa exekutatzen du
     }
 }
-
