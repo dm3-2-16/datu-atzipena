@@ -252,8 +252,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
                     gehituId.getText().toUpperCase(),
                     gehituIzena.getText(),
                     gehituGaia.getText(),
-                    urtea,
                     iraupena,
+                    urtea,
                     gehituHerrialdea.getText(),
                     gehituZuzendaria.getText()
                 );

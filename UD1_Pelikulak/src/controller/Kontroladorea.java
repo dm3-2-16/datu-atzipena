@@ -5,8 +5,10 @@
  */
 package controller;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -23,17 +25,32 @@ import model.Pelikula;
 public class Kontroladorea {
     /* Pelikulak gordetzeko fitxategia src\fitxategiak karpetan egongo dira */
     private static File dirFitx = new File("src\\fitxategiak");
-    private static File fitxategia = new File(dirFitx+"\\pelikula.txt");
+    private static File fitxategia = new File(dirFitx+"\\pelikula.txt");    
     
-    public static ObservableList<Pelikula> datuakKargatu(){
-        // Bistako taulan kargatzeko datuak
-        return FXCollections.observableArrayList(
-            // Pelikulen instantzia berriak sortu
-            new Pelikula("P0001", "El mundo es suyo", "Komedia", 2018, 92, "Espainia", "Alfonso Sánchez Fernández"),
-            new Pelikula("P0002", "Johnny English: De nuevo en acción", "Komedia", 2018, 88, "Erresuma Batua", "David Kerr"),
-            new Pelikula("P0003", "La vida es bella", "Drama", 1997, 117, "Italia", "Roberto Benigni"),
-            new Pelikula("P0004", "Matrix", "Zeintzia fikzioa", 1999, 131, "Estatu Batuak", "Lilly Wachowski, Lana Wachowski")
-        );
+    public static ObservableList<Pelikula> datuakKargatu() {
+        //BufferedReader br = null;
+        ObservableList<Pelikula> peliObList = FXCollections.observableArrayList(); ;
+        String[] atributoak;
+        if (!fitxategia.exists())
+            System.out.println("Ez da existitzen");
+        else {
+            try {
+                FileReader fr = new FileReader(fitxategia);
+                BufferedReader br = new BufferedReader(fr);
+                String lerroa;
+                /* Lerroz lerro irakurri, fitxategiaren bukaerararte heldu arte */
+                while ((lerroa = br.readLine()) != null) {
+                    atributoak = lerroa.split(",");
+                    Pelikula peli = new Pelikula(atributoak[0].toUpperCase(), atributoak[1], atributoak[2], Integer.parseInt(atributoak[3]), Integer.parseInt(atributoak[4]), atributoak[5], atributoak[6]);
+                    peliObList.add(peli);
+                }
+                return peliObList;
+            } catch (IOException ex) {
+                //Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("errorea egon da");
+            }
+        }
+        return null;
     }        
 
     /**

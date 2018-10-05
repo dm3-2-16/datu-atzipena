@@ -19,19 +19,19 @@ public class Pelikula {
     private final SimpleStringProperty id;
     private final SimpleStringProperty izena;
     private final SimpleStringProperty gaia;
-    private final SimpleIntegerProperty urtea;
     private final SimpleIntegerProperty iraupena;
+    private final SimpleIntegerProperty urtea;
     private final SimpleStringProperty herrialdea;
     private final SimpleStringProperty zuzendaria;
     
     
     /* ERAIKITZAILEA */
-    public Pelikula(String pId, String pIzena, String pGaia, int pUrtea, int pIraupena, String pHerrialdea, String pZuzendaria) { 
+    public Pelikula(String pId, String pIzena, String pGaia, int pIraupena, int pUrtea, String pHerrialdea, String pZuzendaria) { 
         this.id = new SimpleStringProperty(pId);
         this.izena = new SimpleStringProperty(pIzena);
         this.gaia = new SimpleStringProperty(pGaia);
-        this.urtea = new SimpleIntegerProperty(pUrtea);
         this.iraupena = new SimpleIntegerProperty(pIraupena);
+        this.urtea = new SimpleIntegerProperty(pUrtea);
         this.herrialdea = new SimpleStringProperty(pHerrialdea);
         this.zuzendaria = new SimpleStringProperty(pZuzendaria);
     }
@@ -55,17 +55,17 @@ public class Pelikula {
     public void setGaia(String pGaia) {
         gaia.set(pGaia);
     }
-    public int getUrtea() {
-        return urtea.get();
-    }
-    public void setUrtea(int pUrtea) {
-        urtea.set(pUrtea);
-    }
     public int getIraupena() {
         return iraupena.get();
     }
     public void setIraupena(int pIraupena) {
         iraupena.set(pIraupena);
+    }
+    public int getUrtea() {
+        return urtea.get();
+    }
+    public void setUrtea(int pUrtea) {
+        urtea.set(pUrtea);
     }
     public String getHerrialdea() {
         return herrialdea.get();
