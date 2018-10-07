@@ -23,7 +23,11 @@ import model.Pelikula;
  * @version V2.0
  */
 public class Kontroladorea {
-    
+    /**
+     * 
+     * @param fitxategia fitxategi bat hartzen du parametro bezala, bertatik irakurtzeko
+     * @return Pelikula objektuen ObservableList-bat bueltatzen du
+     */
     public static ObservableList<Pelikula> datuakKargatu(File fitxategia) {
         //BufferedReader br = null;
         ObservableList<Pelikula> peliObList = FXCollections.observableArrayList(); ;
@@ -48,8 +52,9 @@ public class Kontroladorea {
 
     /**
      * ObservableList-ean kargatuta dauden pelikulak fitxategian gehitzeko metodoa
-     * @param oList
-     */  
+     * @param oList datuak ObservableListatik hartuko ditu
+     * @param fitxategia zein fitxategitan gorde nahi diren datuak
+     */
     public static void fitxategianGorde(ObservableList<Pelikula> oList, File fitxategia) {
         FileWriter fw = null;
         BufferedWriter bw = null;

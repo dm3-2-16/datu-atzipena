@@ -53,7 +53,6 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
     
     @Override
     public void start(Stage lehenStage) throws FileNotFoundException, MalformedURLException { // stage --> Bista/Window
-
         VBox vbox = new VBox(); // vertical box
         HBox hbox1 = new HBox(); // horizontal box
         HBox hbox2 = new HBox(); // horizontal box
@@ -126,7 +125,12 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         lehenStage.show();
     }
     
-    /* BIGARREN STAGE-a kargatzeko metodoa. Fitxategia parametro bezala pasatu behar da, datuak bertatik kargatzeko */
+    /**
+     * BIGARREN STAGE-a kargatzeko metodoa. Fitxategia parametro bezala pasatu behar da, datuak bertatik kargatzeko
+     * @param stage
+     * @param fitxategia
+     * @return 
+     */
     private Scene scenePeliDatuak(Stage stage, File fitxategia) {
         TableView<Pelikula> taula = new TableView<>(); // taula sortzeko instantzia
         HBox hbox1 = new HBox(); // horizontal box
@@ -512,10 +516,18 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         return aukFitx; 
     }
     
+    /**
+     * Label-ei, estiloa eman
+     * @param label 
+     */
     private void labelEstiloa(Label label) {
         label.setFont(Font.font("Calibri", FontWeight.BOLD, 14));
     }
     
+    /**
+     * Bistako tituluei estiloa (kolorea, tamaina...) eman
+     * @param label 
+     */
     private void tituluEstiloa(Label label) {
         label.setFont(Font.font("Calibri", FontWeight.BOLD, 24));
         label.setStyle("-fx-stroke: black;-fx-text-fill: #7a2334");
