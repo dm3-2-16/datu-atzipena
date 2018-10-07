@@ -27,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.converter.IntegerStringConverter;
@@ -44,13 +45,14 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
     private final TableView<Pelikula> taula = new TableView<>(); // taula sortzeko instantzia
     final HBox hbox1 = new HBox(); // horizontal box
     final HBox hboxBotoiak = new HBox(); // horizontal box
-    //final HBox hbox3 = new HBox(); // horizontal box
+    final HBox hBoxPeliGehituTituloa = new HBox();
     final VBox vbox = new VBox(); // vertical box
     private String btnStyle = "-fx-pref-width: 150px; -fx-background-color:lightcoral; -fx-font: 20px \"Serif\"; -fx-text-fill: white; -fx-alignment: CENTER;"; // BOTOIEN ESTILOA DEFINITU
     
     @Override
     public void start(Stage stage) { // stage --> Bista/Window
-        Scene scene = new Scene(new Group());
+
+        Scene scenePeliDatuak = new Scene(new Group());
         /* Datuak ObservableList<Pelikula>-tik kargatu */
         ObservableList<Pelikula> obListDatuak = Kontroladorea.datuakKargatu();
         
@@ -59,8 +61,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         stage.setHeight(700);
         
         /* LABEL bat gehitu - Taularen titulua */
-        final Label label = new Label("Pelikulen datuak:");
-        label.setFont(new Font("Calibri", 22));
+        final Label labelTaula = new Label("Pelikulen datuak:");
+        tituluEstiloa(labelTaula);
 
         /* TAULAREN propietateak aldatu */
         taula.setEditable(true);
@@ -355,7 +357,12 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         VBox vBoxTxtBox4 = new VBox();
         vBoxTxtBox4.getChildren().addAll(gehituIraupena);
         vBoxTxtBox4.setSpacing(10);
-
+        
+        /* LABEL bat gehitu - Pelikularen datuak gehitzeko titulua */
+        final Label labelGehitu = new Label("Pelikulak gehitu:");
+        tituluEstiloa(labelGehitu);
+        
+        hBoxPeliGehituTituloa.getChildren().addAll(labelGehitu);
         hbox1.setPadding(new Insets(10, 0, 0, 10));
         hbox1.getChildren().addAll(vBoxLabel1, vBoxTxtBox1, vBoxLabel2, vBoxTxtBox2, vBoxLabel3, vBoxTxtBox3, vBoxLabel4, vBoxTxtBox4);
         hbox1.setSpacing(10); //textField-en arteko espazioa
@@ -365,23 +372,29 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         hboxBotoiak.setPadding(new Insets(20, 0, 0, 20));
         
         /* -------------------------------------------------------------- */
+        
         /* ZATIAK banatzeko lerro bat sartu */
         Line lerroa = new Line(10, 10, 900, 10);
 
         vbox.setSpacing(10); // label eta taularen arteko tartea
         vbox.setPadding(new Insets(20, 0, 0, 20));
-        vbox.getChildren().addAll(label, taula, lerroa, hbox1,  hboxBotoiak);
+        vbox.getChildren().addAll(labelTaula, taula, lerroa, hBoxPeliGehituTituloa, hbox1,  hboxBotoiak);
         
-        ((Group) scene.getRoot()).getChildren().addAll(vbox);
+        ((Group) scenePeliDatuak.getRoot()).getChildren().addAll(vbox);
         
         /* BISTA erakusteko */
-        stage.setScene(scene);
+        stage.setScene(scenePeliDatuak);
         stage.show();
     }
     
     
     private void labelEstiloa(Label label) {
         label.setFont(Font.font("Calibri", FontWeight.BOLD, 14));
+    }
+    
+    private void tituluEstiloa(Label label) {
+        label.setFont(Font.font("Calibri", FontWeight.BOLD, 22));
+        label.setStyle("-fx-stroke: black;-fx-text-fill: #7a2334");
     }
     
     /**
