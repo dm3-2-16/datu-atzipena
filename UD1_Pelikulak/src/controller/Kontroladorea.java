@@ -23,32 +23,25 @@ import model.Pelikula;
  * @version V2.0
  */
 public class Kontroladorea {
-    /* Pelikulak gordetzeko fitxategia src\fitxategiak karpetan egongo dira */
-    private static File dirFitx = new File("src\\fitxategiak");
-    private static File fitxategia = new File(dirFitx+"\\pelikula.txt");    
     
-    public static ObservableList<Pelikula> datuakKargatu() {
+    public static ObservableList<Pelikula> datuakKargatu(File fitxategia) {
         //BufferedReader br = null;
         ObservableList<Pelikula> peliObList = FXCollections.observableArrayList(); ;
         String[] atributoak;
-        if (!fitxategia.exists())
-            System.out.println("Ez da existitzen");
-        else {
-            try {
-                FileReader fr = new FileReader(fitxategia);
-                BufferedReader br = new BufferedReader(fr);
-                String lerroa;
-                /* Lerroz lerro irakurri, fitxategiaren bukaerararte heldu arte */
-                while ((lerroa = br.readLine()) != null) {
-                    atributoak = lerroa.split(",");
-                    Pelikula peli = new Pelikula(atributoak[0].toUpperCase(), atributoak[1], atributoak[2], Integer.parseInt(atributoak[3]), Integer.parseInt(atributoak[4]), atributoak[5], atributoak[6]);
-                    peliObList.add(peli);
-                }
-                return peliObList;
-            } catch (IOException ex) {
-                //Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("errorea egon da");
+        try {
+            FileReader fr = new FileReader(fitxategia);
+            BufferedReader br = new BufferedReader(fr);
+            String lerroa;
+            /* Lerroz lerro irakurri, fitxategiaren bukaerararte heldu arte */
+            while ((lerroa = br.readLine()) != null) {
+                atributoak = lerroa.split(",");
+                Pelikula peli = new Pelikula(atributoak[0].toUpperCase(), atributoak[1], atributoak[2], Integer.parseInt(atributoak[3]), Integer.parseInt(atributoak[4]), atributoak[5], atributoak[6]);
+                peliObList.add(peli);
             }
+            return peliObList;
+        } catch (IOException ex) {
+            //Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("errorea egon da");
         }
         return null;
     }        
@@ -57,13 +50,13 @@ public class Kontroladorea {
      * ObservableList-ean kargatuta dauden pelikulak fitxategian gehitzeko metodoa
      * @param oList
      */  
-    public static void fitxategianGorde(ObservableList<Pelikula> oList) {
+    public static void fitxategianGorde(ObservableList<Pelikula> oList, File fitxategia) {
         FileWriter fw = null;
         BufferedWriter bw = null;
-        
+
         /* fitxategiak karpeta ez bada existitzen, sortu egingo du */
-        if (!dirFitx.exists()) {
-            dirFitx.mkdir();
+        if (!fitxategia.exists()) {
+            fitxategia.mkdir();
         }
         try {
             fw = new FileWriter(fitxategia, false); // fitxategia matxakatzeko

@@ -6,6 +6,12 @@
 package ud1_pelikulak;
 
 import controller.Kontroladorea;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.collections.ObservableList;
@@ -28,6 +34,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.converter.IntegerStringConverter;
@@ -42,19 +49,94 @@ import model.Pelikula;
  */
 public class UD1_Pelikulak extends Application { // Application klasetik heredatzeko
     /* ATRIBUTOAK */
-    private final TableView<Pelikula> taula = new TableView<>(); // taula sortzeko instantzia
-    final HBox hbox1 = new HBox(); // horizontal box
-    final HBox hboxBotoiak = new HBox(); // horizontal box
-    final HBox hBoxPeliGehituTituloa = new HBox();
-    final VBox vbox = new VBox(); // vertical box
     private String btnStyle = "-fx-pref-width: 150px; -fx-background-color:lightcoral; -fx-font: 20px \"Serif\"; -fx-text-fill: white; -fx-alignment: CENTER;"; // BOTOIEN ESTILOA DEFINITU
     
     @Override
-    public void start(Stage stage) { // stage --> Bista/Window
+    public void start(Stage lehenStage) throws FileNotFoundException, MalformedURLException { // stage --> Bista/Window
 
+        VBox vbox = new VBox(); // vertical box
+        HBox hbox1 = new HBox(); // horizontal box
+        HBox hbox2 = new HBox(); // horizontal box
+    
+        Scene scenePrincipal = new Scene(new Group(), 600, 400); // zabalera eta altuera parametro bezala pasatzen dira
+        lehenStage.setTitle("PELIKULAK");
+
+        /* LABEL bat gehitu - Taularen titulua */
+        final Label labelTituloa = new Label("PELIKULAK KUDEATU");
+        tituluEstiloa(labelTituloa);
+        
+        final Label labelGaldera = new Label("Zer egin nahi duzu?");
+        labelGaldera.setFont(Font.font("Calibri", FontWeight.SEMI_BOLD, 20));
+        final Label fitxAukeratu = new Label("Fitxategia aukeratu");
+        labelEstiloa(fitxAukeratu);
+        final Button btnAukeratu = new Button("...");
+        final Label fitxBerriaSortu = new Label("Fitxategi berria sortu");
+        labelEstiloa(fitxBerriaSortu);
+        final Button btnBerria = new Button("..."); 
+
+        btnAukeratu.setOnAction((ActionEvent e) -> {
+            try {
+                Stage bigarrenStage = new Stage();
+                Scene scenePeliDatuak = scenePeliDatuak(bigarrenStage, fileChooserErabili(lehenStage, true)); // pelikulen datuak dauden stage-a kargatzen du
+                bigarrenStage.setScene(scenePeliDatuak);
+                bigarrenStage.show();
+            }
+            catch (NullPointerException ex)  {
+                System.err.println("EZ DUZU FITXATEGIA AUKERATU.\n");
+            }
+            catch (ArrayIndexOutOfBoundsException aioobe) {
+                System.err.println("Aukeratutako fitxategiak ez dauka formatu egokia.\n");
+                Alert dialogoAlerta = new Alert(Alert.AlertType.ERROR); // Ikonoa
+                dialogoAlerta.setTitle("KONTUZ!"); // Titulua
+                dialogoAlerta.setHeaderText(null);
+                dialogoAlerta.setContentText("Aukeratutako fitxategiak ez dauka formatu egokia."); // Mezua
+                dialogoAlerta.initStyle(StageStyle.UTILITY);
+                dialogoAlerta.showAndWait();
+            }
+        });
+        
+        btnBerria.setOnAction((ActionEvent e) -> {
+            try {
+                Stage bigarrenStage = new Stage();
+                Scene scenePeliDatuak = scenePeliDatuak(bigarrenStage, fileChooserErabili(lehenStage, false)); // pelikulen datuak dauden stage-a kargatzen du
+                bigarrenStage.setScene(scenePeliDatuak);
+                bigarrenStage.show();
+            }
+            catch (NullPointerException ex)  {
+                System.err.println("EZ DUZU FITXATEGIA SORTU.\n");
+            }
+        });
+        hbox1.getChildren().addAll(fitxAukeratu, btnAukeratu);
+        hbox1.setSpacing(20); // hbox1-eko elementuen arteko espazioa gehitu
+        
+        hbox2.getChildren().addAll(fitxBerriaSortu, btnBerria);
+        hbox2.setSpacing(10); // hbox2-eko elementuen arteko espazioa gehitu
+        
+        /* Espazioak gehitu horizontal box-etan (goian eta ezkerrean) */
+        hbox1.setPadding(new Insets(20, 0, 0, 40));
+        hbox2.setPadding(new Insets(10, 0, 0, 40));
+        
+        vbox.getChildren().addAll(labelTituloa, labelGaldera, hbox1, hbox2);
+        vbox.setPadding(new Insets(20, 0, 0, 20));
+        vbox.setSpacing(10); // vbox-eko elementuen arteko tartea
+        ((Group) scenePrincipal.getRoot()).getChildren().addAll(vbox);
+        
+        /* BISTA erakusteko */
+        lehenStage.setScene(scenePrincipal);
+        lehenStage.show();
+    }
+    
+    /* BIGARREN STAGE-a kargatzeko metodoa. Fitxategia parametro bezala pasatu behar da, datuak bertatik kargatzeko */
+    private Scene scenePeliDatuak(Stage stage, File fitxategia) {
+        TableView<Pelikula> taula = new TableView<>(); // taula sortzeko instantzia
+        HBox hbox1 = new HBox(); // horizontal box
+        HBox hboxBotoiak = new HBox(); // horizontal box
+        HBox hBoxPeliGehituTituloa = new HBox();
+        VBox vbox = new VBox(); // vertical box
+        
         Scene scenePeliDatuak = new Scene(new Group());
         /* Datuak ObservableList<Pelikula>-tik kargatu */
-        ObservableList<Pelikula> obListDatuak = Kontroladorea.datuakKargatu();
+        ObservableList<Pelikula> obListDatuak = Kontroladorea.datuakKargatu(fitxategia);
         
         stage.setTitle("PELIKULAK"); // Bistari titulua gehitu
         stage.setWidth(1000);
@@ -225,51 +307,67 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         btnGehitu.setOnAction((ActionEvent e) -> {    
             int urtea=2018, iraupena = 100;
             boolean urteaOndo = true, iraupenaOndo = true, gordeta = false; // aldagai boleanoak
-            try {
-                urtea = Integer.parseInt(gehituUrtea.getText()); // urtea jaso
-            }
-            catch (NumberFormatException nfeUrtea) { // zenbakia ez bada, errore mezua erakutsiko du
+            
+            /* TextBox-ak beteta daudela konprobatzen du */
+            if (gehituId.getText().isEmpty() || gehituIzena.getText().isEmpty() || gehituGaia.getText().isEmpty() 
+                    || gehituIraupena.getText().isEmpty() || gehituUrtea.getText().isEmpty() 
+                    || gehituHerrialdea.getText().isEmpty() || gehituZuzendaria.getText().isEmpty()) {
                 Alert dialogoAlerta = new Alert(Alert.AlertType.ERROR); // Ikonoa
                 dialogoAlerta.setTitle("KONTUZ!"); // Titulua
                 dialogoAlerta.setHeaderText(null);
-                dialogoAlerta.setContentText("Urtea gaizki sartu duzu!"); // Mezua
+                dialogoAlerta.setContentText("Daturenbat betetzea ahaztu zaizu.\nBete hitzazu."); // Mezua
                 dialogoAlerta.initStyle(StageStyle.UTILITY);
                 dialogoAlerta.showAndWait();
-                urteaOndo = false;
+                gordeta=false;
             }
-            try {
-                Integer.parseInt(gehituIraupena.getText()); // iraupena jaso
+            else {
+                /* TextBox guztiak beteta baldin badaude, urtea eta iraupena zenbakiak direla konprobatzen du */
+                try {
+                    urtea = Integer.parseInt(gehituUrtea.getText()); // urtea jaso
+                }
+                catch (NumberFormatException nfeUrtea) { // zenbakia ez bada, errore mezua erakutsiko du
+                    Alert dialogoAlerta = new Alert(Alert.AlertType.ERROR); // Ikonoa
+                    dialogoAlerta.setTitle("KONTUZ!"); // Titulua
+                    dialogoAlerta.setHeaderText(null);
+                    dialogoAlerta.setContentText("Urtea gaizki sartu duzu!"); // Mezua
+                    dialogoAlerta.initStyle(StageStyle.UTILITY);
+                    dialogoAlerta.showAndWait();
+                    urteaOndo = false;
+                }
+                try {
+                    Integer.parseInt(gehituIraupena.getText()); // iraupena jaso
+                }
+                catch (NumberFormatException nfeIraupena) { // zenbakia ez bada, errore mezua erakutsiko du
+                    Alert dialogoAlerta = new Alert(Alert.AlertType.ERROR); // Ikonoa
+                    dialogoAlerta.setTitle("KONTUZ!"); // Titulua
+                    dialogoAlerta.setHeaderText(null);
+                    dialogoAlerta.setContentText("Iraupena gaizki sartu duzu!\nZenbaki oso bat izan behar da"); // Mezua
+                    dialogoAlerta.initStyle(StageStyle.UTILITY);
+                    dialogoAlerta.showAndWait();
+                    iraupenaOndo = false;
+                }
+                if (urteaOndo && iraupenaOndo) { // urtea eta iraupena ondo jaso badira (formatu egokian)
+                    Pelikula peli = new Pelikula(
+                        gehituId.getText().toUpperCase(),
+                        gehituIzena.getText(),
+                        gehituGaia.getText(),
+                        iraupena,
+                        urtea,
+                        gehituHerrialdea.getText(),
+                        gehituZuzendaria.getText()
+                    );
+                    obListDatuak.add(peli); // pelikula berria observableList-ean (taulan) gehitu
+                    Kontroladorea.fitxategianGorde(obListDatuak, fitxategia); // ObservableList-ean dauden pelikula guztiak fitxategian idatzi
+                    gordeta = true; // gorde egingo da
+                }
+                if(!urteaOndo) {
+                    gehituUrtea.clear(); // urtea gaizki sartu badu, textua hustu
+                }
+                if (!iraupenaOndo) {
+                    gehituIraupena.clear(); // iraupena gaizki sartu badu, textua hustu
+                }
             }
-            catch (NumberFormatException nfeIraupena) { // zenbakia ez bada, errore mezua erakutsiko du
-                Alert dialogoAlerta = new Alert(Alert.AlertType.ERROR); // Ikonoa
-                dialogoAlerta.setTitle("KONTUZ!"); // Titulua
-                dialogoAlerta.setHeaderText(null);
-                dialogoAlerta.setContentText("Iraupena gaizki sartu duzu!\nZenbaki oso bat izan behar da"); // Mezua
-                dialogoAlerta.initStyle(StageStyle.UTILITY);
-                dialogoAlerta.showAndWait();
-                iraupenaOndo = false;
-            }
-            if (urteaOndo && iraupenaOndo) { // urtea eta iraupena ondo jaso badira (formatu egokian)
-                Pelikula peli = new Pelikula(
-                    gehituId.getText().toUpperCase(),
-                    gehituIzena.getText(),
-                    gehituGaia.getText(),
-                    iraupena,
-                    urtea,
-                    gehituHerrialdea.getText(),
-                    gehituZuzendaria.getText()
-                );
-                obListDatuak.add(peli); // pelikula berria observableList-ean (taulan) gehitu
-                Kontroladorea.fitxategianGorde(obListDatuak); // ObservableList-ean dauden pelikula guztiak fitxategian idatzi
-                gordeta = true; // gorde egingo da
-            }
-            if(!urteaOndo) {
-                gehituUrtea.clear(); // urtea gaizki sartu badu, textua hustu
-            }
-            if (!iraupenaOndo) {
-                gehituIraupena.clear(); // iraupena gaizki sartu badu, textua hustu
-            }
-
+            
             if (gordeta) {
                 /* Pelikula berria gorde bada, informazio mezu bat erakutsi */
                 Alert dialogoAlerta = new Alert(Alert.AlertType.INFORMATION); // Ikonoa
@@ -299,7 +397,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             if (aukeratuta!=null) {
                 Pelikula pelikula1 = (Pelikula)aukeratuta;    
                 obListDatuak.remove(pelikula1);
-                Kontroladorea.fitxategianGorde(obListDatuak); // ObservableList-ean dauden pelikula guztiak fitxategian idatzi
+                Kontroladorea.fitxategianGorde(obListDatuak, fitxategia); // ObservableList-ean dauden pelikula guztiak fitxategian idatzi
                 /* Pelikula ezabatu bada, informazio mezu bat erakutsi */
                 Alert dialogoAlerta = new Alert(Alert.AlertType.INFORMATION); // Ikonoa
                 dialogoAlerta.setTitle("EZABATUTA!"); // Titulua
@@ -359,7 +457,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         vBoxTxtBox4.setSpacing(10);
         
         /* LABEL bat gehitu - Pelikularen datuak gehitzeko titulua */
-        final Label labelGehitu = new Label("Pelikulak gehitu:");
+        final Label labelGehitu = new Label("PELIKULAK GEHITU:");
         tituluEstiloa(labelGehitu);
         
         hBoxPeliGehituTituloa.getChildren().addAll(labelGehitu);
@@ -381,19 +479,45 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         vbox.getChildren().addAll(labelTaula, taula, lerroa, hBoxPeliGehituTituloa, hbox1,  hboxBotoiak);
         
         ((Group) scenePeliDatuak.getRoot()).getChildren().addAll(vbox);
-        
-        /* BISTA erakusteko */
-        stage.setScene(scenePeliDatuak);
-        stage.show();
+        return scenePeliDatuak; 
     }
     
+    /**
+     * 
+     * @param lehenStage
+     * @param b booleanoa, True: fitx zabaldu. False: fitx gorde 
+     * @return aukeratutako fitxategia bueltatzen du
+     */
+    private File fileChooserErabili(Stage lehenStage, boolean b){
+        File aukFitx;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Aukeratu fitxategia...");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Text Files", "*.txt"));
+//                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+//                new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+//                new ExtensionFilter("All Files", "*.*"));
+        if (b) // TRUE
+            aukFitx = fileChooser.showOpenDialog(lehenStage);
+        else {
+            aukFitx = fileChooser.showSaveDialog(lehenStage);
+            // fitxategia ez denez existitzen, sortu egingo da
+            try {
+                aukFitx.getAbsoluteFile().createNewFile();
+            } 
+            catch (IOException ex) {
+                Logger.getLogger(UD1_Pelikulak.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }   
+        return aukFitx; 
+    }
     
     private void labelEstiloa(Label label) {
         label.setFont(Font.font("Calibri", FontWeight.BOLD, 14));
     }
     
     private void tituluEstiloa(Label label) {
-        label.setFont(Font.font("Calibri", FontWeight.BOLD, 22));
+        label.setFont(Font.font("Calibri", FontWeight.BOLD, 24));
         label.setStyle("-fx-stroke: black;-fx-text-fill: #7a2334");
     }
     
