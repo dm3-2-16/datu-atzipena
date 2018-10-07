@@ -49,7 +49,7 @@ import model.Pelikula;
  */
 public class UD1_Pelikulak extends Application { // Application klasetik heredatzeko
     /* ATRIBUTOAK */
-    private String btnStyle = "-fx-pref-width: 150px; -fx-background-color:lightcoral; -fx-font: 20px \"Serif\"; -fx-text-fill: white; -fx-alignment: CENTER;"; // BOTOIEN ESTILOA DEFINITU
+    private String btnStyle = "-fx-pref-width: 170px; -fx-background-color:lightcoral; -fx-font: 20px \"Serif\"; -fx-text-fill: white; -fx-alignment: CENTER;"; // BOTOIEN ESTILOA DEFINITU
     
     @Override
     public void start(Stage lehenStage) throws FileNotFoundException, MalformedURLException { // stage --> Bista/Window
@@ -136,15 +136,14 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         HBox hbox1 = new HBox(); // horizontal box
         HBox hboxBotoiak = new HBox(); // horizontal box
         HBox hBoxPeliGehituTituloa = new HBox();
+        HBox hBoxGehituHonela = new HBox();
         VBox vbox = new VBox(); // vertical box
         
-        Scene scenePeliDatuak = new Scene(new Group());
+        Scene scenePeliDatuak = new Scene(new Group(), 1000, 800);
         /* Datuak ObservableList<Pelikula>-tik kargatu */
         ObservableList<Pelikula> obListDatuak = Kontroladorea.datuakKargatu(fitxategia);
         
         stage.setTitle("PELIKULAK"); // Bistari titulua gehitu
-        stage.setWidth(1000);
-        stage.setHeight(700);
         
         /* LABEL bat gehitu - Taularen titulua */
         final Label labelTaula = new Label("Pelikulen datuak:");
@@ -339,7 +338,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
                     urteaOndo = false;
                 }
                 try {
-                    Integer.parseInt(gehituIraupena.getText()); // iraupena jaso
+                    iraupena = Integer.parseInt(gehituIraupena.getText()); // iraupena jaso
                 }
                 catch (NumberFormatException nfeIraupena) { // zenbakia ez bada, errore mezua erakutsiko du
                     Alert dialogoAlerta = new Alert(Alert.AlertType.ERROR); // Ikonoa
@@ -426,6 +425,14 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         btnIrten.setOnAction((ActionEvent e) -> {
             System.exit(0);
         });
+        
+        // GORDE HONELA botoia definitu
+        final Button btnGordeHonela = new Button("Gorde honela..."); 
+        btnGordeHonela.setStyle(btnStyle);
+        btnGordeHonela.setOnAction((ActionEvent e) -> {
+            File f = fileChooserErabili(stage, false);
+            Kontroladorea.fitxategianGorde(obListDatuak, f);
+        });
 
         // textBox eta label-ak alineatzeko, vbox-ak sortu
         VBox vBoxLabel1 = new VBox(); // vertical box
@@ -461,9 +468,10 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         vBoxTxtBox4.setSpacing(10);
         
         /* LABEL bat gehitu - Pelikularen datuak gehitzeko titulua */
-        final Label labelGehitu = new Label("PELIKULAK GEHITU:");
+        final Label labelGehitu = new Label("Pelikulak gehitu:");
         tituluEstiloa(labelGehitu);
         
+        hBoxGehituHonela.getChildren().addAll(btnGordeHonela);
         hBoxPeliGehituTituloa.getChildren().addAll(labelGehitu);
         hbox1.setPadding(new Insets(10, 0, 0, 10));
         hbox1.getChildren().addAll(vBoxLabel1, vBoxTxtBox1, vBoxLabel2, vBoxTxtBox2, vBoxLabel3, vBoxTxtBox3, vBoxLabel4, vBoxTxtBox4);
@@ -480,7 +488,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
 
         vbox.setSpacing(10); // label eta taularen arteko tartea
         vbox.setPadding(new Insets(20, 0, 0, 20));
-        vbox.getChildren().addAll(labelTaula, taula, lerroa, hBoxPeliGehituTituloa, hbox1,  hboxBotoiak);
+        vbox.getChildren().addAll(labelTaula, taula,hBoxGehituHonela, lerroa, hBoxPeliGehituTituloa, hbox1,  hboxBotoiak);
         
         ((Group) scenePeliDatuak.getRoot()).getChildren().addAll(vbox);
         return scenePeliDatuak; 

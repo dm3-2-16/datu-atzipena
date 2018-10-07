@@ -1,6 +1,14 @@
-P0001,El mundo es suyo,Komedia,92,2018,Espainia,Alfonso Sánchez Fernández
+﻿P0001,El mundo es suyo,Komedia,92,2018,Espainia,Alfonso Sánchez Fernández
 P0002,Johnny English: De nuevo en acción,Komedia,88,2018,Erresuma Batua,David Kerr
 P0003,La vida es bella,Drama,117,1997,Italia,Roberto Benigni
 P0004,Matrix,Zeintzia fikzioa,131,1999,Estatu Batuak,Lilly Wachowski
 P0005,Christopher Robin,Komedia,100,2018,Estatu batuak,Marc Forster
 P0006,Ola de crímenes,Komedia,100,2018,Espainia,Garcia Querejeta
+P0007,Billy Elliot,Drama,111,2000,Erresuma Batua,Stephen Daldry
+P0008,Handia (Aundiya),Drama,114,2017,Espainia,Jon Garaño eta  Aitor Arregi
+P0009,Amama,Drama,103,2015,Espainia,Asier Altuna
+P0010,Entre dos aguas,Dokumentala,136,2018,Espainia,Isaki Lacuesta
+P0011,High Life,Zientzia fikzioa,110,2018,Frantzia,Claire Denis
+P0012,Fast & Furious 8,Akzioa,136,2017,Estatu Batuak,F. Gary Gray
+P0013,Toy Story 3,Animazioa,103,2010,Estatu Batuak,Lee Unkrich
+P0014,Origen,Zientzia fikzioa,148,2010,Estatu Batuak,Christopher Nolan
