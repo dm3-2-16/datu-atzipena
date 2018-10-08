@@ -430,9 +430,14 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         final Button btnGordeHonela = new Button("Gorde honela..."); 
         btnGordeHonela.setStyle(btnStyle);
         btnGordeHonela.setOnAction((ActionEvent e) -> {
-            File f = fileChooserErabili(stage, false);
-            Kontroladorea.fitxategianGorde(obListDatuak, f);
-        });
+            try {
+                File f = fileChooserErabili(stage, false);
+                Kontroladorea.fitxategianGorde(obListDatuak, f);
+            }
+            catch (NullPointerException ex)  {
+                System.err.println("EZ DUZU FITXATEGIA SORTU.\n");
+            } 
+        }); 
 
         // textBox eta label-ak alineatzeko, vbox-ak sortu
         VBox vBoxLabel1 = new VBox(); // vertical box
