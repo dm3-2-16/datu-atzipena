@@ -48,36 +48,20 @@ public class Kontroladorea {
     }
     
     /**
-     * 
-     * @param fitxategia txt fitxategi bat hartzen du parametro bezala, bertatik irakurtzeko
+     * Main-etik, metodo hau deituko da. Fitxategiaren extentsioaren arabera irakurriko dira datuak
+     * @param fitxategia xml edo txt fitxategi bat hartzen du parametro bezala, bertatik irakurtzeko
      * @return Pelikula objektuen ObservableList-bat bueltatzen du
      */
     public static ObservableList<Pelikula> datuakKargatu(File fitxategia) {
-        FileReader fr = null;
-        BufferedReader br = null;
-        ObservableList<Pelikula> peliObList = FXCollections.observableArrayList();
-        String[] atributoak;
-        try {
-            fr = new FileReader(fitxategia);
-            br = new BufferedReader(fr);
-            String lerroa;
-            /* Lerroz lerro irakurri, fitxategiaren bukaerararte heldu arte */
-            while ((lerroa = br.readLine()) != null) {
-                atributoak = lerroa.split(",");
-                Pelikula peli = new Pelikula(atributoak[0].toUpperCase(), atributoak[1], atributoak[2], Integer.parseInt(atributoak[3]), Integer.parseInt(atributoak[4]), atributoak[5], atributoak[6]);
-                peliObList.add(peli);
-            }
-            return peliObList;
-        } catch (IOException ex) {
-            System.out.println("Errorea egon da");
+        /* Fitxategiaren extentsioa zein den begiratu */
+        String fitxExt = fitxategia.getName().substring(fitxategia.getName().length()-4).toLowerCase();
+        
+        /* Fitxategien extentsioa zein den konprobatu eta bakoitza irakurtzeko funtzioari deitu */
+        if (fitxExt.equals(".txt")) {
+            return txtDatuakKargatu(fitxategia);
         }
-        finally {
-            try {
-                fr.close();
-                br.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        else if (fitxExt.equals(".xml")) {
+            return xmlDatuakKargatu(fitxategia);
         }
         return null;
     }     
@@ -119,7 +103,43 @@ public class Kontroladorea {
     }
     
     /**
-     * 
+     * txt fitxategia irakurtzen du
+     * @param fitxategia txt fitxategi bat hartzen du parametro bezala, bertatik irakurtzeko
+     * @return Pelikula objektuen ObservableList-bat bueltatzen du
+     */
+    public static ObservableList<Pelikula> txtDatuakKargatu(File fitxategia) {
+        FileReader fr = null;
+        BufferedReader br = null;
+        ObservableList<Pelikula> peliObList = FXCollections.observableArrayList();
+        String[] atributoak;
+        
+        try {
+            fr = new FileReader(fitxategia);
+            br = new BufferedReader(fr);
+            String lerroa;
+            /* Lerroz lerro irakurri, fitxategiaren bukaerararte heldu arte */
+            while ((lerroa = br.readLine()) != null) {
+                atributoak = lerroa.split(",");
+                Pelikula peli = new Pelikula(atributoak[0].toUpperCase(), atributoak[1], atributoak[2], Integer.parseInt(atributoak[3]), Integer.parseInt(atributoak[4]), atributoak[5], atributoak[6]);
+                peliObList.add(peli);
+            }
+            return peliObList;
+        } catch (IOException ex) {
+            System.out.println("Errorea egon da");
+        }
+        finally {
+            try {
+                fr.close();
+                br.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;        
+    }
+    
+    /**
+     * xml fitxategi bat irakurtzen du
      * @param fitxategia xml fitxategi bat hartzen du parametro bezala, bertatik irakurtzeko
      * @return Pelikula objektuen ObservableList-bat bueltatzen du
      */
@@ -169,8 +189,8 @@ public class Kontroladorea {
                 catch (NumberFormatException nfe) {
                     System.out.println("Errore bat egon da iraupena edo urtea jasotzerakoan");
                 }
-                Pelikula peli = new Pelikula(idPeli, izenaPeli, gaiaPeli, iraupena, urtea, herrialdeaPeli, zuzendariaPeli);
-                peliObList.add(peli);
+                Pelikula peli = new Pelikula(idPeli, izenaPeli, gaiaPeli, iraupena, urtea, herrialdeaPeli, zuzendariaPeli); // Pelikula objektua sortu, xml-ko datuekin
+                peliObList.add(peli); // ObservableList-ean gehitu
             }   return peliObList;
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
