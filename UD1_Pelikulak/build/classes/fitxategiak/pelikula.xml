@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<pelikulak>
+	<peli id="0001">
+		<izena>El mundo es suyo</izena>
+		<gaia>Komedia</gaia>
+		<iraupena>92</iraupena>
+		<urtea>2018</urtea>
+		<herrialdea>Espainia</herrialdea>
+		<zuzendaria>Alfonso Sánchez Fernández</zuzendaria>
+	</peli>
+	<peli id="0002">
+		<izena>La vida es bella</izena>
+		<gaia>Drama</gaia>
+		<iraupena>117</iraupena>
+		<urtea>1997</urtea>
+		<herrialdea>Italia</herrialdea>
+		<zuzendaria>Roberto Benigni</zuzendaria>
+	</peli>
+</pelikulak>

@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -22,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -284,8 +286,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         gehituIzena.setPromptText("Izena");
         gehituIzena.setMaxWidth(izenZut.getPrefWidth()*2);
 
-        final TextField gehituGaia = new TextField();
-        gehituGaia.setPromptText("Gaia");
+        final ComboBox gehituGaia = new ComboBox(FXCollections.observableList(Kontroladorea.comboBoxGaiaKargatu()));
+        gehituGaia.getSelectionModel().getSelectedIndex();
         gehituGaia.setMaxWidth(gaiaZut.getPrefWidth()*2);
 
         final TextField gehituIraupena = new TextField();
@@ -312,7 +314,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             boolean urteaOndo = true, iraupenaOndo = true, gordeta = false; // aldagai boleanoak
             
             /* TextBox-ak beteta daudela konprobatzen du */
-            if (gehituId.getText().isEmpty() || gehituIzena.getText().isEmpty() || gehituGaia.getText().isEmpty() 
+            if (gehituId.getText().isEmpty() || gehituIzena.getText().isEmpty() || gehituGaia.getSelectionModel().isEmpty()
                     || gehituIraupena.getText().isEmpty() || gehituUrtea.getText().isEmpty() 
                     || gehituHerrialdea.getText().isEmpty() || gehituZuzendaria.getText().isEmpty()) {
                 Alert dialogoAlerta = new Alert(Alert.AlertType.ERROR); // Ikonoa
@@ -353,7 +355,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
                     Pelikula peli = new Pelikula(
                         gehituId.getText().toUpperCase(),
                         gehituIzena.getText(),
-                        gehituGaia.getText(),
+                        gehituGaia.getSelectionModel().getSelectedItem().toString(), // Aukeratutako item-a hartu
                         iraupena,
                         urtea,
                         gehituHerrialdea.getText(),
@@ -383,7 +385,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
                 // TextBox-ean dagoena garbitu
                 gehituId.clear();
                 gehituIzena.clear();
-                gehituGaia.clear();
+                gehituGaia.getSelectionModel().clearSelection();
                 gehituUrtea.clear();
                 gehituIraupena.clear();
                 gehituHerrialdea.clear();
@@ -510,13 +512,14 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Aukeratu fitxategia...");
         fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Text Files", "*.txt"));
+                new ExtensionFilter("Text Files", "*.txt"),
+                new ExtensionFilter("XML Files", "*.xml"));
 //                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
 //                new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
 //                new ExtensionFilter("All Files", "*.*"));
         if (b) // TRUE
             aukFitx = fileChooser.showOpenDialog(lehenStage);
-        else {
+        else { // FALSE
             aukFitx = fileChooser.showSaveDialog(lehenStage);
             // fitxategia ez denez existitzen, sortu egingo da
             try {

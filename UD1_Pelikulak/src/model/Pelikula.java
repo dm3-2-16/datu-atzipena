@@ -25,7 +25,7 @@ public class Pelikula {
     private final SimpleStringProperty zuzendaria;
     
     
-    /* ERAIKITZAILEA */
+    /* ERAIKITZAILEA */   
     public Pelikula(String pId, String pIzena, String pGaia, int pIraupena, int pUrtea, String pHerrialdea, String pZuzendaria) { 
         this.id = new SimpleStringProperty(pId);
         this.izena = new SimpleStringProperty(pIzena);
