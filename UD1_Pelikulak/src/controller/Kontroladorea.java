@@ -20,6 +20,12 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import model.Pelikula;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -72,33 +78,20 @@ public class Kontroladorea {
      * @param fitxategia zein fitxategitan gorde nahi diren datuak
      */
     public static void fitxategianGorde(ObservableList<Pelikula> oList, File fitxategia) {
-        FileWriter fw = null;
-        BufferedWriter bw = null;
-
+        /* Fitxategiaren extentsioa zein den begiratu */
+        String fitxExt = fitxategia.getName().substring(fitxategia.getName().length()-4).toLowerCase();
+        
         /* fitxategiak karpeta ez bada existitzen, sortu egingo du */
         if (!fitxategia.exists()) {
             fitxategia.mkdir();
         }
-        try {
-            fw = new FileWriter(fitxategia, false); // fitxategia matxakatzeko
-            bw = new BufferedWriter(fw);
-            /* Pelikularen datuak fitxategian idatzi */
-            for (int i = 0; i<oList.size(); i++) {
-                bw.write(oList.get(i).getId()+","+oList.get(i).getIzena()+","+oList.get(i).getGaia()+","+oList.get(i).getIraupena()+","+oList.get(i).getUrtea()+","+oList.get(i).getHerrialdea()+","+oList.get(i).getZuzendaria());
-                bw.newLine();
-            }
-
-            bw.flush(); // Datuak fitxategian kargatzea behartu
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-        finally {
-            try {
-                fw.close();
-                bw.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        
+        /* Fitxategien extentsioa zein den konprobatu eta bakoitza idazteko funtzioari deitu */
+        if (fitxExt.equals(".txt")) {
+            txtFitxategianGorde(oList, fitxategia);
+        }
+        else if (fitxExt.equals(".xml")) {
+            xmlFitxategianGorde(oList, fitxategia);
         }
     }
     
@@ -200,5 +193,106 @@ public class Kontroladorea {
             Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    /**
+     * ObservableList-ean kargatuta dauden pelikulak, txt fitxategian gehitzeko metodoa
+     * @param oList datuak ObservableListatik hartuko ditu
+     * @param fitxategia zein txt fitxategitan gorde nahi diren datuak
+     */
+    public static void txtFitxategianGorde(ObservableList<Pelikula> oList, File fitxategia) {
+        FileWriter fw = null;
+        BufferedWriter bw = null;
+        try {
+            fw = new FileWriter(fitxategia, false); // fitxategia matxakatzeko
+            bw = new BufferedWriter(fw);
+            /* Pelikularen datuak fitxategian idatzi */
+            for (int i = 0; i<oList.size(); i++) {
+                bw.write(oList.get(i).getId()+","+oList.get(i).getIzena()+","+oList.get(i).getGaia()+","+oList.get(i).getIraupena()+","+oList.get(i).getUrtea()+","+oList.get(i).getHerrialdea()+","+oList.get(i).getZuzendaria());
+                bw.newLine();
+            }
+
+            bw.flush(); // Datuak fitxategian kargatzea behartu
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+        finally {
+            try {
+                fw.close();
+                bw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    /**
+     * ObservableList-ean kargatuta dauden pelikulak, xml fitxategian gehitzeko metodoa
+     * @param oList datuak ObservableListatik hartuko ditu
+     * @param fitxategia zein xml fitxategitan gorde nahi diren datuak
+     */
+    public static void xmlFitxategianGorde(ObservableList<Pelikula> oList, File fitxategia) {
+        
+        try {
+            //Zuhaitza Sortu fitxategitik abiatuta
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            //Document dok = builder.parse(fitxategia);
+            
+            // DOM zuhaitza sortu
+            Document dokBerria = builder.newDocument();
+            
+            Element elemAita = dokBerria.createElement("pelikula");
+            dokBerria.appendChild(elemAita); // elemento RAIZ gehitu <pelikula>
+            dokBerria.setTextContent("\n"); // salto de linea gehitu fitxategian
+
+            for (int i = 0; i<oList.size(); i++) {
+                Element elemPeli = dokBerria.createElement("peli");
+                
+                /* <pelikula> elementuari, <peli> elementu bakoitza gehitu */
+                elemAita.appendChild(elemPeli);
+                elemPeli.setAttribute("id", oList.get(i).getId());
+                
+                /* <peli> elementuaren semeak eta bakoitzaren textua sortu */
+                Element elemIzena = dokBerria.createElement("izena");
+                elemIzena.appendChild(dokBerria.createTextNode(oList.get(i).getIzena()));
+                
+                Element elemGaia = dokBerria.createElement("gaia");
+                elemGaia.appendChild(dokBerria.createTextNode(oList.get(i).getGaia()));
+                
+                Element elemIraupena = dokBerria.createElement("iraupena");
+                elemIraupena.appendChild(dokBerria.createTextNode(String.valueOf(oList.get(i).getIraupena())));
+                
+                Element elemUrtea = dokBerria.createElement("urtea");
+                elemUrtea.appendChild(dokBerria.createTextNode(String.valueOf(oList.get(i).getUrtea())));
+                
+                Element elemHerrialdea = dokBerria.createElement("herrialdea");
+                elemHerrialdea.appendChild(dokBerria.createTextNode(oList.get(i).getHerrialdea()));
+                
+                Element elemZuzendaria = dokBerria.createElement("zuzendaria");
+                elemZuzendaria.appendChild(dokBerria.createTextNode(oList.get(i).getZuzendaria()));
+                
+                /* <peli> bakoitzaren elementuak (izena, gaia...) gehitu */
+                elemPeli.appendChild(elemIzena);
+                elemPeli.appendChild(elemGaia);
+                elemPeli.appendChild(elemIraupena);
+                elemPeli.appendChild(elemUrtea);
+                elemPeli.appendChild(elemHerrialdea);
+                elemPeli.appendChild(elemZuzendaria);
+                
+                /* Fitxategian idatzi */
+                TransformerFactory transfFactory = TransformerFactory.newInstance();
+                Transformer transf = transfFactory.newTransformer();
+                DOMSource source = new DOMSource(dokBerria);
+                StreamResult rs = new StreamResult(fitxategia);
+                transf.transform(source, rs);
+            }  
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
