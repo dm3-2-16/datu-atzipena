@@ -39,6 +39,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.converter.IntegerStringConverter;
 import model.Pelikula;
 
@@ -176,7 +177,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             (TableColumn.CellEditEvent<Pelikula, String> t) -> {
             ((Pelikula) t.getTableView().getItems().get(
             t.getTablePosition().getRow())
-            ).setId(t.getNewValue());
+            ).setIzena(t.getNewValue());
             });
         
         /* Pelikulen GAIA definitu */
@@ -188,7 +189,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             (TableColumn.CellEditEvent<Pelikula, String> t) -> {
             ((Pelikula) t.getTableView().getItems().get(
             t.getTablePosition().getRow())
-            ).setId(t.getNewValue());
+            ).setGaia(t.getNewValue());
             });
         
         /* Pelikulen IRAUPENA definitu */
@@ -200,7 +201,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             (TableColumn.CellEditEvent<Pelikula, Integer> t) -> {
             ((Pelikula) t.getTableView().getItems().get(
             t.getTablePosition().getRow())
-            ).setId(t.getNewValue().toString());
+            ).setIraupena(Integer.parseInt(t.getNewValue().toString()));
             });
         
         /* Pelikulen URTEA definitu */
@@ -212,7 +213,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             (TableColumn.CellEditEvent<Pelikula, Integer> t) -> {
             ((Pelikula) t.getTableView().getItems().get(
             t.getTablePosition().getRow())
-            ).setId(t.getNewValue().toString());
+            ).setUrtea(Integer.parseInt(t.getNewValue().toString()));
             });
              
         /* Pelikulen HERRIALDEA definitu */
@@ -224,7 +225,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             (TableColumn.CellEditEvent<Pelikula, String> t) -> {
             ((Pelikula) t.getTableView().getItems().get(
             t.getTablePosition().getRow())
-            ).setId(t.getNewValue());
+            ).setHerrialdea(t.getNewValue());
             });
         
         /* Pelikulen ZUZENDARIA definitu */
@@ -236,7 +237,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             (TableColumn.CellEditEvent<Pelikula, String> t) -> {
             ((Pelikula) t.getTableView().getItems().get(
             t.getTablePosition().getRow())
-            ).setId(t.getNewValue());
+            ).setZuzendaria(t.getNewValue());
             });
         
         /* Datuak kargatu */
@@ -425,6 +426,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         final Button btnIrten = new Button("Irten"); 
         btnIrten.setStyle(btnStyle);
         btnIrten.setOnAction((ActionEvent e) -> {
+            /* Leihoa ixterakoan irten botoiarekin, datuak fitxategian gorde */
+            Kontroladorea.fitxategianGorde(obListDatuak, fitxategia);
             System.exit(0);
         });
         
@@ -498,6 +501,12 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         vbox.getChildren().addAll(labelTaula, taula,hBoxGehituHonela, lerroa, hBoxPeliGehituTituloa, hbox1,  hboxBotoiak);
         
         ((Group) scenePeliDatuak.getRoot()).getChildren().addAll(vbox);
+        
+        /* Leihoa ixterakoan, datuak fitxategian gordeko ditu */
+        stage.setOnCloseRequest((WindowEvent event) -> {
+            Kontroladorea.fitxategianGorde(obListDatuak, fitxategia);
+        });
+        
         return scenePeliDatuak; 
     }
     
