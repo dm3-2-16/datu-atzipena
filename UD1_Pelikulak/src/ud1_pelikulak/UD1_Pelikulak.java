@@ -30,6 +30,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
@@ -59,8 +61,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         VBox vbox = new VBox(); // vertical box
         HBox hbox1 = new HBox(); // horizontal box
         HBox hbox2 = new HBox(); // horizontal box
-    
-        Scene scenePrincipal = new Scene(new Group(), 600, 400); // zabalera eta altuera parametro bezala pasatzen dira
+
+        Scene scenePrincipal = new Scene(new Group(), 400, 300); // zabalera eta altuera parametro bezala pasatzen dira
         lehenStage.setTitle("PELIKULAK");
 
         /* LABEL bat gehitu - Taularen titulua */
