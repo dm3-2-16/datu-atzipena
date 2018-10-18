@@ -514,20 +514,20 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
     
     /**
      * 
-     * @param lehenStage
+     * @param lehenStage Stagea
      * @param b booleanoa, True: fitx zabaldu. False: fitx gorde 
      * @return aukeratutako fitxategia bueltatzen du
      */
     private File fileChooserErabili(Stage lehenStage, boolean b){
         File aukFitx;
         FileChooser fileChooser = new FileChooser();
+        File defaultDirectory = new File(".\\src\\fitxategiak"); // Defektuz, fitxategia aukeratzeko proiektuko karpeta horretan zabalduko du
+        fileChooser.setInitialDirectory(defaultDirectory);
         fileChooser.setTitle("Aukeratu fitxategia...");
         fileChooser.getExtensionFilters().addAll(
                 new ExtensionFilter("Text Files", "*.txt"),
                 new ExtensionFilter("XML Files", "*.xml"),
                 new ExtensionFilter("JSON Files", "*.json"));
-//                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
-//                new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
 //                new ExtensionFilter("All Files", "*.*"));
         if (b) // TRUE
             aukFitx = fileChooser.showOpenDialog(lehenStage);
