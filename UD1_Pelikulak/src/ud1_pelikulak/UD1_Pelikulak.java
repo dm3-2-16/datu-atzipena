@@ -524,7 +524,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         fileChooser.setTitle("Aukeratu fitxategia...");
         fileChooser.getExtensionFilters().addAll(
                 new ExtensionFilter("Text Files", "*.txt"),
-                new ExtensionFilter("XML Files", "*.xml"));
+                new ExtensionFilter("XML Files", "*.xml"),
+                new ExtensionFilter("JSON Files", "*.json"));
 //                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
 //                new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
 //                new ExtensionFilter("All Files", "*.*"));

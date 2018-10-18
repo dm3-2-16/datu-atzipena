@@ -8,14 +8,23 @@ package controller;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonWriter;
 import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -85,14 +94,22 @@ public class Kontroladorea {
         if (!fitxategia.exists()) {
             fitxategia.mkdir();
         }
-        
-        /* Fitxategien extentsioa zein den konprobatu eta bakoitza idazteko funtzioari deitu */
-        if (fitxExt.equals(".txt")) {
-            txtFitxategianGorde(oList, fitxategia);
+        /* ObservableList-a hutsik baldin badago, leihoa ixterakoan ez du gordeko */
+        if (oList != null) {
+            /* Fitxategien extentsioa zein den konprobatu eta bakoitza idazteko funtzioari deitu */
+            if (fitxExt.equals(".txt")) {
+                txtFitxategianGorde(oList, fitxategia);
+            }
+            else if (fitxExt.equals(".xml")) {
+                xmlFitxategianGorde(oList, fitxategia);
+            }
+            else if (fitxExt.equals("json")) {
+                jsonFitxategianGorde(oList, fitxategia);
+            }
         }
-        else if (fitxExt.equals(".xml")) {
-            xmlFitxategianGorde(oList, fitxategia);
-        }
+        else 
+            System.out.println(fitxategia.getName() + " fitxategia hutsik sortu da.");
+            
     }
     
     /**
@@ -194,7 +211,7 @@ public class Kontroladorea {
         }
         return null;
     }
-    
+        
     /**
      * ObservableList-ean kargatuta dauden pelikulak, txt fitxategian gehitzeko metodoa
      * @param oList datuak ObservableListatik hartuko ditu
@@ -294,5 +311,38 @@ public class Kontroladorea {
         } catch (TransformerException ex) {
             Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    /**
+     * ObservableList-ean kargatuta dauden pelikulak, json fitxategian gehitzeko metodoa
+     * @param oList datuak ObservableListatik hartuko ditu
+     * @param fitxategia zein json fitxategitan gorde nahi diren datuak
+     */
+    public static void jsonFitxategianGorde(ObservableList<Pelikula> oList, File fitxategia) {
+        JsonWriter jsonWriter = null;
+        
+        try { 
+            JsonArrayBuilder arrayB = Json.createArrayBuilder(); // JsonArray-a sortu
+            JsonObjectBuilder objectB = Json.createObjectBuilder(); // Json Objektua sortu
+            
+            for (Pelikula peli : oList) {
+                /* Objektuak, elementu bakoitza gehitu */
+                objectB.add("id", peli.getId()); 
+                objectB.add("izena", peli.getIzena());
+                objectB.add("gaia", peli.getGaia());
+                objectB.add("iraupena", String.valueOf(peli.getIraupena()));
+                objectB.add("urtea", String.valueOf(peli.getUrtea()));
+                objectB.add("herrialdea", peli.getHerrialdea());
+                objectB.add("zuzendaria", peli.getZuzendaria());
+                
+                JsonObject jsonObjPeli = objectB.build(); 
+                arrayB.add(jsonObjPeli); // Objektuak array-era gehitu
+            }
+            JsonArray jsonArrayPeli = arrayB.build();
+            jsonWriter = Json.createWriter(new FileOutputStream(fitxategia, false)); //JsonWriter-ekin, jsonArray-a fitxategian idazteko
+            jsonWriter.write(jsonArrayPeli); // datuak fitxategian idatzi
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
 }
