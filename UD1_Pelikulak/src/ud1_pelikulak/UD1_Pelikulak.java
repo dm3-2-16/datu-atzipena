@@ -27,15 +27,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -44,6 +43,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.converter.IntegerStringConverter;
 import model.Pelikula;
+import javafx.scene.control.TextField;
 
 
 
@@ -54,14 +54,17 @@ import model.Pelikula;
  */
 public class UD1_Pelikulak extends Application { // Application klasetik heredatzeko
     /* ATRIBUTOAK */
-    private String btnStyle = "-fx-pref-width: 170px; -fx-background-color:lightcoral; -fx-font: 20px \"Serif\"; -fx-text-fill: white; -fx-alignment: CENTER;"; // BOTOIEN ESTILOA DEFINITU
+    private String btnStyle = "-fx-pref-width: 150px; -fx-background-color:lightcoral; -fx-font: 20px \"Serif\"; -fx-text-fill: white; -fx-alignment: CENTER;"; // BOTOIEN ESTILOA DEFINITU
+    private String btnStyleTxiki = "-fx-background-color:darkred; -fx-font: 15px \"Serif\"; -fx-text-fill: white; -fx-alignment: CENTER; -fx-font-weight: bold;"; // BOTOIEN (txikien) ESTILOA DEFINITU
+    private File fitxategia; // fitxategia aldatzen joango da, baina beti taulan dauden datuak kargatuta dagoen fitxategia gordeko da
+    private ObservableList<Pelikula> obListDatuak;
     
     @Override
     public void start(Stage lehenStage) throws FileNotFoundException, MalformedURLException { // stage --> Bista/Window
         VBox vbox = new VBox(); // vertical box
         HBox hbox1 = new HBox(); // horizontal box
         HBox hbox2 = new HBox(); // horizontal box
-
+        
         Scene scenePrincipal = new Scene(new Group(), 400, 300); // zabalera eta altuera parametro bezala pasatzen dira
         lehenStage.setTitle("PELIKULAK");
 
@@ -74,14 +77,17 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         final Label fitxAukeratu = new Label("Fitxategia aukeratu");
         labelEstiloa(fitxAukeratu);
         final Button btnAukeratu = new Button("...");
+        btnAukeratu.setStyle(btnStyleTxiki);
         final Label fitxBerriaSortu = new Label("Fitxategi berria sortu");
         labelEstiloa(fitxBerriaSortu);
         final Button btnBerria = new Button("..."); 
+        btnBerria.setStyle(btnStyleTxiki);
 
         btnAukeratu.setOnAction((ActionEvent e) -> {
             try {
                 Stage bigarrenStage = new Stage();
-                Scene scenePeliDatuak = scenePeliDatuak(bigarrenStage, fileChooserErabili(lehenStage, true)); // pelikulen datuak dauden stage-a kargatzen du
+                this.fitxategia = fileChooserErabili(lehenStage, true);
+                Scene scenePeliDatuak = scenePeliDatuak(bigarrenStage); // pelikulen datuak dauden stage-a kargatzen du
                 bigarrenStage.setScene(scenePeliDatuak);
                 bigarrenStage.show();
             }
@@ -102,7 +108,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         btnBerria.setOnAction((ActionEvent e) -> {
             try {
                 Stage bigarrenStage = new Stage();
-                Scene scenePeliDatuak = scenePeliDatuak(bigarrenStage, fileChooserErabili(lehenStage, false)); // pelikulen datuak dauden stage-a kargatzen du
+                this.fitxategia = fileChooserErabili(lehenStage, false); 
+                Scene scenePeliDatuak = scenePeliDatuak(bigarrenStage); // pelikulen datuak dauden stage-a kargatzen du
                 bigarrenStage.setScene(scenePeliDatuak);
                 bigarrenStage.show();
             }
@@ -127,6 +134,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         
         /* BISTA erakusteko */
         lehenStage.setScene(scenePrincipal);
+        
+        //lehenStage.initStyle(StageStyle.UNIFIED);
         lehenStage.show();
     }
     
@@ -135,18 +144,28 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
      * @param stage
      * @param fitxategia
      * @return 
-     */
-    private Scene scenePeliDatuak(Stage stage, File fitxategia) {
+     */   
+    private Scene scenePeliDatuak(Stage stage) {
         TableView<Pelikula> taula = new TableView<>(); // taula sortzeko instantzia
         HBox hbox1 = new HBox(); // horizontal box
+        HBox hBoxLabelFitxAuk = new HBox();
         HBox hboxBotoiak = new HBox(); // horizontal box
-        HBox hBoxPeliGehituTituloa = new HBox();
-        HBox hBoxGehituHonela = new HBox();
         VBox vbox = new VBox(); // vertical box
+
+        String labelTxtAukFitx = "Aukeratutako fitxategia: ";
+        final Label labelFitxAukIzena = new Label(); // Momentuan aukeratuta dagoen fitxategiaren izena erakusten du
+        labelFitxAukEstiloa(labelFitxAukIzena);
+        final Label labelFitxIreki = new Label("Ireki: ");
+        labelFitxAukEstiloa(labelFitxIreki);
+        final Button btnIrekiFitx = new Button();
+        btnIrekiFitx.setText("...");
+        btnIrekiFitx.setStyle(btnStyleTxiki);
         
         Scene scenePeliDatuak = new Scene(new Group(), 1000, 800);
+        
         /* Datuak ObservableList<Pelikula>-tik kargatu */
-        ObservableList<Pelikula> obListDatuak = Kontroladorea.datuakKargatu(fitxategia);
+        this.obListDatuak = Kontroladorea.datuakKargatu(this.fitxategia);
+        labelFitxAukIzena.setText(labelTxtAukFitx+this.fitxategia.getName()); // aukeratutako fitxategiaren izena aldatu
         
         stage.setTitle("PELIKULAK"); // Bistari titulua gehitu
         
@@ -243,7 +262,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             });
         
         /* Datuak kargatu */
-        taula.setItems(obListDatuak); 
+        taula.setItems(this.obListDatuak); // taulara, observableList-eko datuak gehitu
 
         /* Zutabeak taulan gehitu */
         taula.getColumns().addAll(idZut, izenZut, gaiaZut, iraupenZut, urteZut, herrialdeZut, zuzendariaZut);
@@ -290,8 +309,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         gehituIzena.setMaxWidth(izenZut.getPrefWidth()*2);
 
         final ComboBox gehituGaia = new ComboBox(FXCollections.observableList(Kontroladorea.comboBoxGaiaKargatu()));
-        gehituGaia.getSelectionModel().getSelectedIndex();
         gehituGaia.setMaxWidth(gaiaZut.getPrefWidth()*2);
+        gehituGaia.getSelectionModel().select(0);
 
         final TextField gehituIraupena = new TextField();
         gehituIraupena.setPromptText("Iraupena");
@@ -317,13 +336,13 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             boolean urteaOndo = true, iraupenaOndo = true, gordeta = false; // aldagai boleanoak
             
             /* TextBox-ak beteta daudela konprobatzen du */
-            if (gehituId.getText().isEmpty() || gehituIzena.getText().isEmpty() || gehituGaia.getSelectionModel().isEmpty()
+            if (gehituId.getText().isEmpty() || gehituIzena.getText().isEmpty() || gehituGaia.getSelectionModel().getSelectedIndex()==0
                     || gehituIraupena.getText().isEmpty() || gehituUrtea.getText().isEmpty() 
                     || gehituHerrialdea.getText().isEmpty() || gehituZuzendaria.getText().isEmpty()) {
                 Alert dialogoAlerta = new Alert(Alert.AlertType.ERROR); // Ikonoa
                 dialogoAlerta.setTitle("KONTUZ!"); // Titulua
                 dialogoAlerta.setHeaderText(null);
-                dialogoAlerta.setContentText("Daturenbat betetzea ahaztu zaizu.\nBete hitzazu."); // Mezua
+                dialogoAlerta.setContentText("Daturenbat betetzea ahaztu zaizu.\nBete itzazu."); // Mezua
                 dialogoAlerta.initStyle(StageStyle.UTILITY);
                 dialogoAlerta.showAndWait();
                 gordeta=false;
@@ -364,8 +383,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
                         gehituHerrialdea.getText(),
                         gehituZuzendaria.getText()
                     );
-                    obListDatuak.add(peli); // pelikula berria observableList-ean (taulan) gehitu
-                    Kontroladorea.fitxategianGorde(obListDatuak, fitxategia); // ObservableList-ean dauden pelikula guztiak fitxategian idatzi
+                    this.obListDatuak.add(peli); // pelikula berria observableList-ean (taulan) gehitu
+                    Kontroladorea.fitxategianGorde(this.obListDatuak, this.fitxategia); // ObservableList-ean dauden pelikula guztiak fitxategian idatzi
                     gordeta = true; // gorde egingo da
                 }
                 if(!urteaOndo) {
@@ -388,7 +407,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
                 // TextBox-ean dagoena garbitu
                 gehituId.clear();
                 gehituIzena.clear();
-                gehituGaia.getSelectionModel().clearSelection();
+                gehituGaia.getSelectionModel().select(0);
                 gehituUrtea.clear();
                 gehituIraupena.clear();
                 gehituHerrialdea.clear();
@@ -404,8 +423,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             /* Ezabatu aurretik, konprobatu pelikularik aukeratuta dagoen edo ez */
             if (aukeratuta!=null) {
                 Pelikula pelikula1 = (Pelikula)aukeratuta;    
-                obListDatuak.remove(pelikula1);
-                Kontroladorea.fitxategianGorde(obListDatuak, fitxategia); // ObservableList-ean dauden pelikula guztiak fitxategian idatzi
+                this.obListDatuak.remove(pelikula1);
+                Kontroladorea.fitxategianGorde(this.obListDatuak, this.fitxategia); // ObservableList-ean dauden pelikula guztiak fitxategian idatzi
                 /* Pelikula ezabatu bada, informazio mezu bat erakutsi */
                 Alert dialogoAlerta = new Alert(Alert.AlertType.INFORMATION); // Ikonoa
                 dialogoAlerta.setTitle("EZABATUTA!"); // Titulua
@@ -429,22 +448,42 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         btnIrten.setStyle(btnStyle);
         btnIrten.setOnAction((ActionEvent e) -> {
             /* Leihoa ixterakoan irten botoiarekin, datuak fitxategian gorde */
-            Kontroladorea.fitxategianGorde(obListDatuak, fitxategia);
+            Kontroladorea.fitxategianGorde(this.obListDatuak, this.fitxategia);
             System.exit(0);
         });
         
         // GORDE HONELA botoia definitu
-        final Button btnGordeHonela = new Button("Gorde honela..."); 
-        btnGordeHonela.setStyle(btnStyle);
+        final Button btnGordeHonela = new Button("Gorde honela...");
+        btnGordeHonela.setStyle(btnStyleTxiki);
         btnGordeHonela.setOnAction((ActionEvent e) -> {
             try {
                 File f = fileChooserErabili(stage, false);
-                Kontroladorea.fitxategianGorde(obListDatuak, f);
+                Kontroladorea.fitxategianGorde(this.obListDatuak, f);
+                Kontroladorea.datuakKargatu(f);
+                this.fitxategia = f;
+                labelFitxAukIzena.setText(labelTxtAukFitx+this.fitxategia.getName()); // aukeratutako fitxategiaren izena aldatu
             }
             catch (NullPointerException ex)  {
                 System.err.println("EZ DUZU FITXATEGIA SORTU.\n");
             } 
-        }); 
+        });
+        
+        /* Fitxategi berria irekitzeko botoia */
+        btnIrekiFitx.setOnAction((ActionEvent e) -> {
+            try {
+                this.fitxategia = fileChooserErabili(stage, true);
+                this.obListDatuak = Kontroladorea.datuakKargatu(this.fitxategia); // datuak observableList-ean erreferentziaz pasatu
+                taula.setItems(this.obListDatuak);  // taulara, observableList-eko datuak gehitu
+                labelFitxAukIzena.setText(labelTxtAukFitx+this.fitxategia.getName()); // aukeratutako fitxategiaren izena aldatu
+            }
+            catch (NullPointerException ex)  {
+                System.err.println("EZ DUZU FITXATEGIA SORTU.\n");
+            } 
+        });
+        
+        /* LABEL bat gehitu - Pelikularen datuak gehitzeko titulua */
+        final Label labelGehitu = new Label("Pelikulak gehitu:");
+        tituluEstiloa(labelGehitu);
 
         // textBox eta label-ak alineatzeko, vbox-ak sortu
         VBox vBoxLabel1 = new VBox(); // vertical box
@@ -478,35 +517,43 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         VBox vBoxTxtBox4 = new VBox();
         vBoxTxtBox4.getChildren().addAll(gehituIraupena);
         vBoxTxtBox4.setSpacing(10);
+
+        /* Ireki label-a eta fitxategi berria irekitzeko botoia dituen horizontalBox-a */
+        HBox hBoxIrekiFitx = new HBox();
+        hBoxIrekiFitx.getChildren().addAll(labelFitxIreki, btnIrekiFitx);
+        hBoxIrekiFitx.setSpacing(10);
         
-        /* LABEL bat gehitu - Pelikularen datuak gehitzeko titulua */
-        final Label labelGehitu = new Label("Pelikulak gehitu:");
-        tituluEstiloa(labelGehitu);
+        /* Aukeratuta dagoen fitxategia eta fitxategi berria kargatzeko aukerak ematen dituen horizontalBox-a */
+        hBoxLabelFitxAuk.getChildren().addAll(labelFitxAukIzena, hBoxIrekiFitx);
+        hBoxLabelFitxAuk.setSpacing(100);
         
-        hBoxGehituHonela.getChildren().addAll(btnGordeHonela);
-        hBoxPeliGehituTituloa.getChildren().addAll(labelGehitu);
+        /* ZATIAK banatzeko lerro bat sartu */
+        Line lerroa = new Line(10, 10, 900, 10);
+        lerroa.setStroke(Color.DARKRED); // lerroaren kolorea aldatu
+        lerroa.setStrokeWidth(3); // lerroaren lodiera aldatu
+        
+        /* Pelikulak erregistratzeko label eta textBox-ak dituen horizontalBox-a */
         hbox1.setPadding(new Insets(10, 0, 0, 10));
         hbox1.getChildren().addAll(vBoxLabel1, vBoxTxtBox1, vBoxLabel2, vBoxTxtBox2, vBoxLabel3, vBoxTxtBox3, vBoxLabel4, vBoxTxtBox4);
         hbox1.setSpacing(10); //textField-en arteko espazioa
         
+        /* GEHITU, EZABATU eta IRTEN botoiak dituen horizontalBox-a */
         hboxBotoiak.getChildren().addAll(btnGehitu, btnEzabatu, btnIrten);
         hboxBotoiak.setSpacing(50);
         hboxBotoiak.setPadding(new Insets(20, 0, 0, 20));
         
         /* -------------------------------------------------------------- */
         
-        /* ZATIAK banatzeko lerro bat sartu */
-        Line lerroa = new Line(10, 10, 900, 10);
-
+        /* Elementu guztiak, verticalBox-ean sartu */
         vbox.setSpacing(10); // label eta taularen arteko tartea
         vbox.setPadding(new Insets(20, 0, 0, 20));
-        vbox.getChildren().addAll(labelTaula, taula,hBoxGehituHonela, lerroa, hBoxPeliGehituTituloa, hbox1,  hboxBotoiak);
+        vbox.getChildren().addAll(labelTaula, hBoxLabelFitxAuk, taula, btnGordeHonela, lerroa, labelGehitu, hbox1,  hboxBotoiak);
         
         ((Group) scenePeliDatuak.getRoot()).getChildren().addAll(vbox);
         
         /* Leihoa ixterakoan, datuak fitxategian gordeko ditu */
         stage.setOnCloseRequest((WindowEvent event) -> {
-            Kontroladorea.fitxategianGorde(obListDatuak, fitxategia);
+            Kontroladorea.fitxategianGorde(this.obListDatuak, this.fitxategia);
         });
         
         return scenePeliDatuak; 
@@ -523,15 +570,17 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         FileChooser fileChooser = new FileChooser();
         File defaultDirectory = new File(".\\src\\fitxategiak"); // Defektuz, fitxategia aukeratzeko proiektuko karpeta horretan zabalduko du
         fileChooser.setInitialDirectory(defaultDirectory);
-        fileChooser.setTitle("Aukeratu fitxategia...");
         fileChooser.getExtensionFilters().addAll(
                 new ExtensionFilter("Text Files", "*.txt"),
                 new ExtensionFilter("XML Files", "*.xml"),
                 new ExtensionFilter("JSON Files", "*.json"));
 //                new ExtensionFilter("All Files", "*.*"));
-        if (b) // TRUE
+        if (b) { // TRUE
+            fileChooser.setTitle("Ireki fitxategia...");
             aukFitx = fileChooser.showOpenDialog(lehenStage);
+        }
         else { // FALSE
+            fileChooser.setTitle("Gorde fitxategia honela...");
             aukFitx = fileChooser.showSaveDialog(lehenStage);
             // fitxategia ez denez existitzen, sortu egingo da
             try {
@@ -561,6 +610,15 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         label.setStyle("-fx-stroke: black;-fx-text-fill: #7a2334");
     }
     
+    /**
+     * Kargatzen ari den fitxategiaren izena eta berri bat irekitzeko aukera ematen duten label-en estiloa
+     * @param label 
+     */
+    private void labelFitxAukEstiloa(Label label) {
+        label.setFont(Font.font("Arial", FontPosture.ITALIC, 15));
+        label.setTextFill(Color.web("#1047a0"));
+    }
+
     /**
      * @param args the command line arguments
      */
