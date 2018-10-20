@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,6 +52,7 @@ public class Kontroladorea {
      */
     public static ArrayList<String> comboBoxGaiaKargatu() {
         ArrayList<String> arrLGaia = new ArrayList<>();
+        arrLGaia.add("--Aukeratu--");
         arrLGaia.add("Drama");
         arrLGaia.add("Komedia");
         arrLGaia.add("Zientzia fikzioa");
@@ -201,7 +201,8 @@ public class Kontroladorea {
                 }
                 Pelikula peli = new Pelikula(idPeli, izenaPeli, gaiaPeli, iraupena, urtea, herrialdeaPeli, zuzendariaPeli); // Pelikula objektua sortu, xml-ko datuekin
                 peliObList.add(peli); // ObservableList-ean gehitu
-            }   return peliObList;
+            }   
+            return peliObList;
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SAXException ex) {
