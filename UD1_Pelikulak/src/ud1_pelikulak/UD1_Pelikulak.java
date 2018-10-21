@@ -69,6 +69,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         HBox hbox2 = new HBox(); // horizontal box
         Button btnIrten = new Button();
         
+        ikonoaAldatu(lehenStage); // Leihoaren ikonoa aldatu
+        
         Scene scenePrincipal = new Scene(new Group(), 350, 400); // zabalera eta altuera parametro bezala pasatzen dira
         lehenStage.setTitle("PELIKULAK");
         lehenStage.setResizable(false); // tamaina ez aldatu
@@ -165,6 +167,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         HBox hBoxLabelFitxAuk = new HBox();
         HBox hboxBotoiak = new HBox(); // horizontal box
         VBox vbox = new VBox(); // vertical box
+        
+        ikonoaAldatu(stage); // Leihoaren ikonoa aldatu
 
         String labelTxtAukFitx = "Aukeratutako fitxategia: ";
         final Label labelFitxAukIzena = new Label(); // Momentuan aukeratuta dagoen fitxategiaren izena erakusten du
@@ -605,6 +609,10 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             }
         }   
         return aukFitx; 
+    }
+    
+    private void ikonoaAldatu(Stage s) {
+        s.getIcons().add(new Image("\\Irudiak\\ikonoa.png")); // leihoaren iconoa aldatu
     }
     
     /**
