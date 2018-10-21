@@ -18,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -44,6 +45,10 @@ import javafx.stage.WindowEvent;
 import javafx.util.converter.IntegerStringConverter;
 import model.Pelikula;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 
 
 
@@ -65,7 +70,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         HBox hbox1 = new HBox(); // horizontal box
         HBox hbox2 = new HBox(); // horizontal box
         
-        Scene scenePrincipal = new Scene(new Group(), 400, 300); // zabalera eta altuera parametro bezala pasatzen dira
+        Scene scenePrincipal = new Scene(new Group(), 350, 380); // zabalera eta altuera parametro bezala pasatzen dira
         lehenStage.setTitle("PELIKULAK");
 
         /* LABEL bat gehitu - Taularen titulua */
@@ -82,6 +87,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         labelEstiloa(fitxBerriaSortu);
         final Button btnBerria = new Button("..."); 
         btnBerria.setStyle(btnStyleTxiki);
+        
+        ImageView irudiaPeli = new ImageView(new Image("\\Irudiak\\pelikula.png", 200, 150, true, true));
 
         btnAukeratu.setOnAction((ActionEvent e) -> {
             try {
@@ -126,8 +133,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         /* Espazioak gehitu horizontal box-etan (goian eta ezkerrean) */
         hbox1.setPadding(new Insets(20, 0, 0, 40));
         hbox2.setPadding(new Insets(10, 0, 0, 40));
-        
-        vbox.getChildren().addAll(labelTituloa, labelGaldera, hbox1, hbox2);
+        vbox.getChildren().addAll(labelTituloa, labelGaldera, hbox1, hbox2, irudiaPeli);
         vbox.setPadding(new Insets(20, 0, 0, 20));
         vbox.setSpacing(10); // vbox-eko elementuen arteko tartea
         ((Group) scenePrincipal.getRoot()).getChildren().addAll(vbox);
