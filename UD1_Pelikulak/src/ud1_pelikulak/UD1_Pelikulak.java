@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -18,12 +19,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -285,6 +287,35 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         /* Zutabeak taulan gehitu */
         taula.getColumns().addAll(idZut, izenZut, gaiaZut, iraupenZut, urteZut, herrialdeZut, zuzendariaZut);
         
+        /* Fitxategi berria irekitzeko botoia */
+        btnIrekiFitx.setOnAction((ActionEvent e) -> {
+            try {
+                this.fitxategia = fileChooserErabili(stage, true);
+                this.obListDatuak = Kontroladorea.datuakKargatu(this.fitxategia); // datuak observableList-ean erreferentziaz pasatu
+                taula.setItems(this.obListDatuak);  // taulara, observableList-eko datuak gehitu
+                labelFitxAukIzena.setText(labelTxtAukFitx+this.fitxategia.getName()); // aukeratutako fitxategiaren izena aldatu
+            }
+            catch (NullPointerException ex)  {
+                System.err.println("EZ DUZU FITXATEGIA SORTU.\n");
+            } 
+        });
+        
+        // GORDE HONELA botoia definitu
+        final Button btnGordeHonela = new Button("Gorde honela...");
+        btnGordeHonela.setStyle(btnStyleTxiki);
+        btnGordeHonela.setOnAction((ActionEvent e) -> {
+            try {
+                File f = fileChooserErabili(stage, false);
+                Kontroladorea.fitxategianGorde(this.obListDatuak, f);
+                Kontroladorea.datuakKargatu(f);
+                this.fitxategia = f;
+                labelFitxAukIzena.setText(labelTxtAukFitx+this.fitxategia.getName()); // aukeratutako fitxategiaren izena aldatu
+            }
+            catch (NullPointerException ex)  {
+                System.err.println("EZ DUZU FITXATEGIA SORTU.\n");
+            } 
+        });
+        
         /* BEHEKO ZATIA - DATUAK GEHITU, EZABATU... */
         // Label-ak definitu
         final Label labelId = new Label();
@@ -470,33 +501,32 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
             System.exit(0);
         });
         
-        // GORDE HONELA botoia definitu
-        final Button btnGordeHonela = new Button("Gorde honela...");
-        btnGordeHonela.setStyle(btnStyleTxiki);
-        btnGordeHonela.setOnAction((ActionEvent e) -> {
-            try {
-                File f = fileChooserErabili(stage, false);
-                Kontroladorea.fitxategianGorde(this.obListDatuak, f);
-                Kontroladorea.datuakKargatu(f);
-                this.fitxategia = f;
-                labelFitxAukIzena.setText(labelTxtAukFitx+this.fitxategia.getName()); // aukeratutako fitxategiaren izena aldatu
-            }
-            catch (NullPointerException ex)  {
-                System.err.println("EZ DUZU FITXATEGIA SORTU.\n");
-            } 
-        });
-        
-        /* Fitxategi berria irekitzeko botoia */
-        btnIrekiFitx.setOnAction((ActionEvent e) -> {
-            try {
-                this.fitxategia = fileChooserErabili(stage, true);
-                this.obListDatuak = Kontroladorea.datuakKargatu(this.fitxategia); // datuak observableList-ean erreferentziaz pasatu
-                taula.setItems(this.obListDatuak);  // taulara, observableList-eko datuak gehitu
-                labelFitxAukIzena.setText(labelTxtAukFitx+this.fitxategia.getName()); // aukeratutako fitxategiaren izena aldatu
-            }
-            catch (NullPointerException ex)  {
-                System.err.println("EZ DUZU FITXATEGIA SORTU.\n");
-            } 
+        // ATZERA botoia definitu
+        final Button btnAtzera = new Button("Atzera"); 
+        btnAtzera.setStyle(btnStyle);
+        btnAtzera.setOnAction((ActionEvent e) -> {
+            // Atzera joan nahi duzun ziurtatu
+            Alert dialogoAlerta = new Alert(Alert.AlertType.INFORMATION); // Ikonoa
+                dialogoAlerta.setTitle("KONFIRMAZIOA!"); // Titulua
+                dialogoAlerta.setHeaderText(null);
+                dialogoAlerta.setContentText("Egindako aldaketak gorde nahi dituzu?"); // Mezua
+                dialogoAlerta.initStyle(StageStyle.UTILITY);
+                /* Alertako botoiak definitu */
+                ButtonType btnBai = new ButtonType("Bai");
+                ButtonType btnEz = new ButtonType("Ez");
+                ButtonType btnEzeztatu = new ButtonType("Ezeztatu", ButtonData.CANCEL_CLOSE);
+                /* Botoiak gehitu */
+                dialogoAlerta.getButtonTypes().setAll(btnBai, btnEz, btnEzeztatu);
+                /* Erantzuna gorde */
+                Optional<ButtonType> result = dialogoAlerta.showAndWait();
+                boolean itxi = true;
+                if(result.get() == btnBai)
+                    Kontroladorea.fitxategianGorde(this.obListDatuak, this.fitxategia);
+                else if(result.get() == btnEz) { }
+                else if(result.get() == btnEzeztatu)
+                    itxi = false; 
+                if (itxi)
+                    stage.close();
         });
         
         /* LABEL bat gehitu - Pelikularen datuak gehitzeko titulua */
@@ -556,7 +586,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         hbox1.setSpacing(10); //textField-en arteko espazioa
         
         /* GEHITU, EZABATU eta IRTEN botoiak dituen horizontalBox-a */
-        hboxBotoiak.getChildren().addAll(btnGehitu, btnEzabatu, btnIrten);
+        hboxBotoiak.getChildren().addAll(btnGehitu, btnEzabatu, btnAtzera, btnIrten);
         hboxBotoiak.setSpacing(50);
         hboxBotoiak.setPadding(new Insets(20, 0, 0, 20));
         
