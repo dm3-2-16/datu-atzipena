@@ -167,7 +167,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         TableView<Pelikula> taula = new TableView<>(); // taula sortzeko instantzia
         HBox hbox1 = new HBox(); // horizontal box
         HBox hBoxLabelFitxAuk = new HBox();
-        HBox hboxBotoiak = new HBox(); // horizontal box
+        HBox hboxBotoiak = new HBox(); // GEHITU, EZABATU ETA GARBITU
+        HBox hboxBotoiak2 = new HBox(); // ATZERA ETA IRTEN botoiak
         VBox vbox = new VBox(); // vertical box
         
         ikonoaAldatu(stage); // Leihoaren ikonoa aldatu
@@ -347,7 +348,6 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         labelZuzendaria.setText("Zuzendaria:");
         labelEstiloa(labelZuzendaria);
         
-        
         // TextField-ak definitu
         final TextField gehituId = new TextField();
         gehituId.setPromptText("Id");
@@ -378,8 +378,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         gehituZuzendaria.setMaxWidth(zuzendariaZut.getPrefWidth()*2);
         
         // GEHITU botoia definitu
-        final Button btnGehitu = new Button("Gehitu"); 
-        btnGehitu.setStyle(btnStyle);
+        final Button btnGehitu = new Button("Gehitu..."); 
+        btnGehitu.setStyle(btnStyleTxiki);
         btnGehitu.setOnAction((ActionEvent e) -> {    
             int urtea=2018, iraupena = 100;
             boolean urteaOndo = true, iraupenaOndo = true, gordeta = false; // aldagai boleanoak
@@ -465,8 +465,8 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         });
         
         // EZABATU botoia definitu
-        final Button btnEzabatu = new Button("Ezabatu"); 
-        btnEzabatu.setStyle(btnStyle);
+        final Button btnEzabatu = new Button("Ezabatu..."); 
+        btnEzabatu.setStyle(btnStyleTxiki);
         btnEzabatu.setOnAction((ActionEvent e) -> {
             Object aukeratuta = taula.getSelectionModel().getSelectedItem();
             /* Ezabatu aurretik, konprobatu pelikularik aukeratuta dagoen edo ez */
@@ -490,6 +490,20 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
                 dialogoAlerta.initStyle(StageStyle.UTILITY);
                 dialogoAlerta.showAndWait();
             } 
+        });
+        
+        final Button btnGarbitu = new Button();
+        btnGarbitu.setText("Garbitu...");
+        btnGarbitu.setStyle(btnStyleTxiki);
+        btnGarbitu.setOnAction((ActionEvent e) -> {
+            //GARBITU TEXTBOX-AK
+            gehituId.clear();
+            gehituIzena.clear();
+            gehituGaia.getSelectionModel().select(0);
+            gehituUrtea.clear();
+            gehituIraupena.clear();
+            gehituHerrialdea.clear();
+            gehituZuzendaria.clear();
         });
         
         // IRTEN botoia definitu
@@ -586,16 +600,20 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         hbox1.setSpacing(10); //textField-en arteko espazioa
         
         /* GEHITU, EZABATU eta IRTEN botoiak dituen horizontalBox-a */
-        hboxBotoiak.getChildren().addAll(btnGehitu, btnEzabatu, btnAtzera, btnIrten);
+        hboxBotoiak.getChildren().addAll(btnGehitu, btnEzabatu, btnGarbitu);
         hboxBotoiak.setSpacing(50);
         hboxBotoiak.setPadding(new Insets(20, 0, 0, 20));
+        
+        hboxBotoiak2.getChildren().addAll(btnAtzera, btnIrten);
+        hboxBotoiak2.setSpacing(50);
+        hboxBotoiak2.setPadding(new Insets(20, 0, 0, 20));
         
         /* -------------------------------------------------------------- */
         
         /* Elementu guztiak, verticalBox-ean sartu */
         vbox.setSpacing(10); // label eta taularen arteko tartea
         vbox.setPadding(new Insets(20, 0, 0, 20));
-        vbox.getChildren().addAll(labelTaula, hBoxLabelFitxAuk, taula, btnGordeHonela, lerroa, labelGehitu, hbox1,  hboxBotoiak);
+        vbox.getChildren().addAll(labelTaula, hBoxLabelFitxAuk, taula, btnGordeHonela, lerroa, labelGehitu, hbox1,  hboxBotoiak, hboxBotoiak2);
         
         ((Group) scenePeliDatuak.getRoot()).getChildren().addAll(vbox);
         
