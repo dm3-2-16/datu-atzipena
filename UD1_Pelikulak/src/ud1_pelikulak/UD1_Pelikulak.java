@@ -611,6 +611,7 @@ public class UD1_Pelikulak extends Application { // Application klasetik heredat
         return aukFitx; 
     }
     
+    /* Leihoen ikonoa aldatzeko metodoa */
     private void ikonoaAldatu(Stage s) {
         s.getIcons().add(new Image("\\Irudiak\\ikonoa.png")); // leihoaren iconoa aldatu
     }
