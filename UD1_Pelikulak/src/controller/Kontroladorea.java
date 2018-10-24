@@ -23,6 +23,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import javax.json.JsonWriter;
 import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
@@ -77,6 +78,9 @@ public class Kontroladorea {
         }
         else if (fitxExt.equals(".xml")) {
             return xmlDatuakKargatu(fitxategia);
+        }
+        else if (fitxExt.equals("json")) {
+            return jsonDatuakKargatu(fitxategia);
         }
         return null;
     }     
@@ -212,6 +216,49 @@ public class Kontroladorea {
         }
         return null;
     }
+    
+    /**
+     * json fitxategia irakurtzen du
+     * @param fitxategia json fitxategi bat hartzen du parametro bezala, bertatik irakurtzeko
+     * @return Pelikula objektuen ObservableList-bat bueltatzen du
+     */
+    public static ObservableList<Pelikula> jsonDatuakKargatu(File fitxategia) {
+        FileReader fr = null;
+        ObservableList<Pelikula> peliObList = FXCollections.observableArrayList();
+        try {
+            fr = new FileReader(fitxategia);
+            JsonReader reader = Json.createReader(new FileReader(fitxategia));
+            //JsonStructure str = reader.read(); // estruktura irakurri
+            //JsonArray arr = reader.readArray(); // array-a irakurri
+            //JsonObject obj = reader.readObject(); // objektu bat irakurtzeko
+            
+            /* Fitxategiko array-a irakurri */
+            JsonArray arrPelikula = reader.readArray();
+            for (int i = 0; i<arrPelikula.size(); i++) {
+                /* Pelikula bakoitzaren objektua gorde */
+                JsonObject peliBakoitza = (JsonObject) arrPelikula.getJsonObject(i);
+
+                /* Pelikula objektuaren elementu guztiak getString("____")-arekin jaso eta Pelikula objektuan gorde */
+                Pelikula peli = new Pelikula(peliBakoitza.getString("id"), peliBakoitza.getString("izena"), 
+                        peliBakoitza.getString("gaia"), Integer.parseInt(peliBakoitza.getString("iraupena")), 
+                        Integer.parseInt(peliBakoitza.getString("urtea")), peliBakoitza.getString("herrialdea"), 
+                        peliBakoitza.getString("zuzendaria"));
+                
+                /* Pelikula observableList-ean gorde */
+                peliObList.add(peli);
+            }
+            return peliObList;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {        
+            try {
+                fr.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;
+    }
         
     /**
      * ObservableList-ean kargatuta dauden pelikulak, txt fitxategian gehitzeko metodoa
@@ -338,7 +385,7 @@ public class Kontroladorea {
                 
                 JsonObject jsonObjPeli = objectB.build(); 
                 arrayB.add(jsonObjPeli); // Objektuak array-era gehitu
-            }
+            } 
             JsonArray jsonArrayPeli = arrayB.build();
             jsonWriter = Json.createWriter(new FileOutputStream(fitxategia, false)); //JsonWriter-ekin, jsonArray-a fitxategian idazteko
             jsonWriter.write(jsonArrayPeli); // datuak fitxategian idatzi
