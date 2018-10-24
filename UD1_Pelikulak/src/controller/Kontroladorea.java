@@ -223,10 +223,8 @@ public class Kontroladorea {
      * @return Pelikula objektuen ObservableList-bat bueltatzen du
      */
     public static ObservableList<Pelikula> jsonDatuakKargatu(File fitxategia) {
-        FileReader fr = null;
         ObservableList<Pelikula> peliObList = FXCollections.observableArrayList();
         try {
-            fr = new FileReader(fitxategia);
             JsonReader reader = Json.createReader(new FileReader(fitxategia));
             //JsonStructure str = reader.read(); // estruktura irakurri
             //JsonArray arr = reader.readArray(); // array-a irakurri
@@ -250,13 +248,7 @@ public class Kontroladorea {
             return peliObList;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {        
-            try {
-                fr.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Kontroladorea.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        } 
         return null;
     }
         
